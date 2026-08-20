@@ -8,7 +8,7 @@ from collections import Counter, defaultdict
 from typing import List, Dict, Any, Optional
 
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -295,6 +295,7 @@ async def process_agent_chat(query: str, platform_filter: Optional[str] = None) 
     # Structured Response Construction
     formatted_reply = ""
     
+    # 1. Troubleshoot Intent
     if intent == "troubleshoot" and ("502" in query or "bad gateway" in query.lower()):
         diag = diagnose_liara_error(query)
         formatted_reply = f"""### ⚠️ عیب‌یابی: {diag['issue']}
@@ -323,6 +324,7 @@ async def process_agent_chat(query: str, platform_filter: Optional[str] = None) 
 > liara logs --follow
 > ```
 """
+    # 2. Config Generator Intent
     elif intent == "generate_config":
         plat = platform_filter or ("laravel" if "laravel" in query.lower() else "node" if "node" in query.lower() else "django" if "django" in query.lower() else "docker" if "docker" in query.lower() else "python")
         cfg = generate_liara_json(plat, port=3000, disk_name="storage_disk", mount_path="/app/storage", app_name="my-app")
@@ -349,29 +351,163 @@ liara deploy
 > [!NOTE]
 > برای افزودن دیسک دائمی یا متغیرهای محیطی اختصاصی، می‌توانید فیلدهای `disks` و `env` را در همین فایل ویرایش کنید.
 """
-    else:
-        # Synthesize knowledge base answer with rich markdown
-        top_doc = results[0] if results else None
-        if top_doc:
-            clean_text = top_doc['text'].replace('\n\n\n', '\n\n')
-            formatted_reply = f"""### 📖 {top_doc['title']} — {top_doc['section']}
+    # 3. Topic: Laravel & MySQL / Databases
+    elif ("laravel" in query.lower() or "لاراول" in query) and ("mysql" in query.lower() or "دیتابیس" in query or "پایگاه داده" in query):
+        formatted_reply = """### 🐘 راهنمای اتصال دیتابیس MySQL به لاراول (Laravel) در لیارا
 
-{clean_text}
+برای اتصال پایگاه داده مدیریت‌شده MySQL به برنامه لاراول، مراحل زیر را به ترتیب انجام دهید:
 
 ---
 
-### 💻 دستورات و کدهای مرتبط:
+### ۱. تنظیم متغیرهای محیطی (`.env`)
+در داشبورد لیارا، وارد بخش **متغیرها (Environment Variables)** برنامه لاراول خود شوید و اطلاعات دیتابیس ساخته‌شده را وارد کنید:
+
+```ini
+DB_CONNECTION=mysql
+DB_HOST=DB_HOST_LIARA
+DB_PORT=DB_PORT_LIARA
+DB_DATABASE=DB_NAME_LIARA
+DB_USERNAME=DB_USER_LIARA
+DB_PASSWORD=DB_PASS_LIARA
+```
+
+---
+
+### ۲. اجرای مایگریشن‌ها (Migrations & Seeders)
+برای اجرای خودکار مایگریشن‌ها در هر بار استقرار، می‌توانید دستور زیر را در فایل `liara.json` قرار دهید:
+
+```json
+{
+  "platform": "laravel",
+  "laravel": {
+    "webserver": "nginx"
+  },
+  "hook": "php artisan migrate --force"
+}
+```
+
+یا از طریق **کنسول تحت وب (خط فرمان)** لیارا مستقیماً دستور را دستی اجرا کنید:
+```bash
+php artisan migrate --force
+```
+
+> [!TIP]
+> برای امنیت بیشتر، همیشه از فلگ `--force` در محیط پروداکشن برای مایگریشن‌ها استفاده کنید.
+"""
+    # 4. Topic: Disk / Storage
+    elif "دیسک" in query or "disk" in query.lower() or "storage" in query.lower() or "ذخیره" in query:
+        formatted_reply = """### 💾 راهنمای ایجاد و اتصال دیسک ابری دائمی (Persistent Disk) در لیارا
+
+فایل‌سیستم برنامه‌ها در لیارا به صورت پیش‌فرض **ناپایدار (Stateless)** است. برای ذخیره دائمی فایل‌های آپلودی کاربران، فایل‌های مدیا یا دیتابیس‌های فایلی مانند SQLite، باید از دیسک ابری استفاده کنید.
+
+---
+
+### ۱. ساخت دیسک در پنل لیارا
+1. وارد داشبورد برنامه خود شوید.
+2. از منوی سمت راست، گزینه **دیسک‌ها (Disks)** را انتخاب نمایید.
+3. روی **ایجاد دیسک جدید** کلیک کرده و نامی برای آن تعیین کنید (مثلاً `uploads_disk`).
+
+---
+
+### ۲. اتصال دیسک در فایل `liara.json`
+فایل `liara.json` را در ریشه پروژه باز کرده و بخش `disks` را به آن اضافه کنید:
+
+```json
+{
+  "platform": "laravel",
+  "disks": [
+    {
+      "name": "uploads_disk",
+      "mountTo": "/var/www/html/storage/app/public"
+    }
+  ]
+}
+```
+
+---
+
+### ۳. استقرار مجدد برنامه
+پس از ذخیره فایل، برنامه را مجدداً مستقر کنید تا دیسک به مسیر مورد نظر متصل شود:
+```bash
+liara deploy
+```
+"""
+    # 5. Topic: GitHub Actions / CI/CD
+    elif "github" in query.lower() or "actions" in query.lower() or "ci/cd" in query.lower() or "گیت‌هاب" in query or "اتوماسیون" in query:
+        formatted_reply = """### 🚀 راهنمای استقرار خودکار با GitHub Actions در لیارا
+
+با استفاده از سرویس GitHub Actions می‌توانید فرآیند استقرار خودکار را با هر بار `git push` به شاخه اصلی فعال نمایید.
+
+---
+
+### ۱. دریافت API Token از لیارا
+1. وارد حساب کاربری خود در لیارا شوید.
+2. روی تصویر پروفایل کلیک کرده و وارد بخش **دسترسی به API** شوید.
+3. یک کلید جدید ایجاد کرده و مقدار آن را کپی نمایید.
+
+---
+
+### ۲. ذخیره Token در GitHub Secrets
+1. در ریپازیتوری گیت‌هاب خود، به مسیر **Settings > Secrets and variables > Actions** بروید.
+2. روی **New repository secret** کلیک کنید.
+3. نام متغیر را `LIARA_API_TOKEN` و مقدار آن را کلید کپی‌شده بگذارید.
+
+---
+
+### ۳. ایجاد فایل ورک‌فلو (`.github/workflows/liara.yml`)
+فایل زیر را در پوشه `.github/workflows/` پروژه خود ایجاد نمایید:
+
+```yaml
+name: Deploy to Liara Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Liara CLI
+        run: npm install -g @liara/cli
+        
+      - name: Deploy to Liara
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+        run: liara deploy --app my-app-name --api-token $LIARA_TOKEN --detach
+```
+"""
+    # 6. General RAG Synthesis with Clean Formatting
+    else:
+        top_doc = results[0] if results else None
+        if top_doc:
+            # Clean raw text from markdown garbage
+            raw_text = top_doc['text']
+            raw_text = re.sub(r'AddOutputFilterByType[^\n]+', '', raw_text)
+            raw_text = re.sub(r'\s{3,}', '\n\n', raw_text).strip()
+            
+            formatted_reply = f"""### 📖 {top_doc['title']} — {top_doc['section']}
+
+{raw_text}
+
+---
+
+### 💻 دستورات و کدهای اجرایی:
 """
             if top_doc['codes']:
                 for code in top_doc['codes'][:2]:
-                    formatted_reply += f"\n```bash\n{code}\n```\n"
+                    formatted_reply += f"\n```bash\n{code.strip()}\n```\n"
             else:
                 formatted_reply += "\n```bash\nliara deploy\n```\n"
                 
             if len(results) > 1:
                 formatted_reply += "\n### 📌 نکات تکمیلی و راهنماهای مرتبط:\n"
                 for extra in results[1:3]:
-                    formatted_reply += f"- **[{extra['title']} — {extra['section']}]({extra['url']}):** {extra['text'][:140]}...\n"
+                    extra_clean = re.sub(r'AddOutputFilterByType[^\n]+', '', extra['text'])[:120].strip()
+                    formatted_reply += f"- **[{extra['title']} — {extra['section']}]({extra['url']}):** {extra_clean}...\n"
         else:
             formatted_reply = """مستندات دقیقی برای این عبارت یافت نشد. لطفاً نام پلتفرم (مانند NodeJS، Laravel، Django، Docker، PostgreSQL) یا کلمه کلیدی دقیق‌تری را وارد نمایید."""
 
@@ -432,9 +568,21 @@ def search_endpoint(q: str, platform: Optional[str] = None, limit: int = 5):
     return {"query": q, "count": len(results), "results": results}
 
 # ---------------------------------------------------------------------------
-# HTML Single Page Portal
+# HTML Single Page Portal & Favicon
 # ---------------------------------------------------------------------------
+@app.get("/favicon.ico")
+@app.head("/favicon.ico")
+@app.get("/favicon.svg")
+@app.head("/favicon.svg")
+def serve_favicon():
+    svg_path = os.path.join(STATIC_DIR, "favicon.svg")
+    if os.path.exists(svg_path):
+        with open(svg_path, "r", encoding="utf-8") as f:
+            return Response(content=f.read(), media_type="image/svg+xml")
+    return Response(content="<svg xmlns='http://www.w3.org/2000/svg'></svg>", media_type="image/svg+xml")
+
 @app.get("/", response_class=HTMLResponse)
+@app.head("/", response_class=HTMLResponse)
 def serve_portal():
     html_path = os.path.join(BASE_DIR, "templates", "index.html")
     if os.path.exists(html_path):

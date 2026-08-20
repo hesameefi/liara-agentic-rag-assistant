@@ -383,6 +383,17 @@
             line-height: 1.5;
         }
 
+        .msg-bubble a {
+            color: #00e6e6 !important;
+            text-decoration: underline !important;
+            font-weight: 800;
+            transition: all 0.2s ease;
+        }
+        .msg-bubble a:hover {
+            color: #ffffff !important;
+            text-shadow: 0 0 10px rgba(0, 230, 230, 0.8);
+        }
+
         .copy-code-btn {
             position: absolute;
             top: 8px;
@@ -406,28 +417,30 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 14px;
-            padding-top: 14px;
+            margin-top: 16px;
+            padding-top: 16px;
             border-top: 1px dashed var(--border-subtle);
         }
 
         .citation-pill {
-            background: rgba(0, 186, 186, 0.08);
-            border: 1px solid rgba(0, 186, 186, 0.25);
-            color: var(--primary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
+            background: rgba(0, 186, 186, 0.12) !important;
+            border: 1px solid rgba(0, 186, 186, 0.35) !important;
+            color: #00e6e6 !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            font-size: 12.5px !important;
+            font-weight: 800 !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            transition: all 0.2s ease !important;
         }
         .citation-pill:hover {
-            background: var(--primary);
-            color: #06090e;
+            background: var(--primary) !important;
+            color: #06090e !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 186, 186, 0.4);
         }
 
         .suggestions-bar {
