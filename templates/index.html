@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دستیار هوشمند و عامل خودمختار مستندات ابری لیارا | Liara AI Documentation Agent</title>
+    <meta name="description" content="عامل هوشمند پشتیبانی فنی، استقرار، تولید کانفیگ و عیب‌یابی مستندات پلتفرم ابری لیارا با موتور Hybrid RAG.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%2300baba'/><path d='M44 38c3.3 0 6-2.7 6-6 0-3-2.2-5.5-5.1-5.9C43.5 21.6 39.2 18 34 18c-4.4 0-8.2 2.6-9.9 6.4C23.5 24.1 22.8 24 22 24c-4.4 0-8 3.6-8 8s3.6 8 8 8h22z' fill='%23ffffff'/></svg>">
+    
+    <!-- Marked.js for Markdown & Highlight.js for Code Highlighting -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+        /* Typography */
+        @font-face {
+            font-family: 'Yekan Bakh';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: 'Yekan Bakh';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
+            font-weight: 700;
+        }
+        @font-face {
+            font-family: 'Yekan Bakh';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Black.woff2') format('woff2');
+            font-weight: 900;
+        }
+
+        :root, [data-theme="dark"] {
+            --bg-body: #06090e;
+            --bg-header: rgba(12, 17, 24, 0.94);
+            --bg-surface: #0e141c;
+            --bg-card: #131b26;
+            --bg-user-msg: #0d2834;
+            --bg-bot-msg: #131b26;
+            --border-card: #1e293b;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --primary: #00baba;
+            --primary-hover: #00d6d6;
+            --text-main: #f8fafc;
+            --text-sec: #94a3b8;
+            --text-muted: #64748b;
+            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+            --code-bg: #090d12;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-header: rgba(255, 255, 255, 0.94);
+            --bg-surface: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-user-msg: #e0f7f7;
+            --bg-bot-msg: #ffffff;
+            --border-card: #e2e8f0;
+            --border-subtle: #e2e8f0;
+            --primary: #00baba;
+            --primary-hover: #009b9b;
+            --text-main: #0f172a;
+            --text-sec: #475569;
+            --text-muted: #64748b;
+            --shadow-card: 0 4px 20px -4px rgba(0, 0, 0, 0.06);
+            --code-bg: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Yekan Bakh', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #00baba 0%, #087373 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 16px rgba(0, 186, 186, 0.35);
+        }
+
+        .brand-title h1 {
+            font-size: 19px;
+            font-weight: 900;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-agent {
+            background: rgba(0, 186, 186, 0.15);
+            color: var(--primary);
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 186, 186, 0.3);
+        }
+
+        .brand-title span {
+            font-size: 12px;
+            color: var(--text-sec);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 800;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #06090e;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--text-main);
+            border-color: var(--border-card);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
+        /* Layout Container */
+        .app-container {
+            flex: 1;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .sidebar-title {
+            font-size: 14.5px;
+            font-weight: 900;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+        }
+
+        .platform-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .plat-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            color: var(--text-sec);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .plat-btn:hover, .plat-btn.active {
+            background: var(--primary);
+            color: #06090e;
+            font-weight: 900;
+            border-color: var(--primary);
+        }
+
+        .stats-list {
+            list-style: none;
+        }
+        .stats-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-subtle);
+            font-size: 13px;
+            color: var(--text-sec);
+        }
+        .stats-list li:last-child {
+            border-bottom: none;
+        }
+        .stats-list strong {
+            color: var(--text-main);
+            font-family: monospace;
+        }
+
+        /* Chat Area */
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            height: calc(100vh - 130px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .msg-row {
+            display: flex;
+            gap: 14px;
+            max-width: 88%;
+        }
+
+        .msg-row.user {
+            align-self: flex-start;
+            flex-direction: row-reverse;
+        }
+
+        .msg-row.bot {
+            align-self: flex-end;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .msg-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .msg-row.user .msg-avatar {
+            background: var(--primary);
+            color: #06090e;
+        }
+
+        .msg-row.bot .msg-avatar {
+            background: #1e293b;
+            border: 1px solid var(--border-card);
+        }
+
+        .msg-bubble {
+            background: var(--bg-bot-msg);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 18px 22px;
+            font-size: 14.5px;
+            line-height: 1.75;
+            color: var(--text-main);
+        }
+
+        .msg-row.user .msg-bubble {
+            background: var(--bg-user-msg);
+            border-color: rgba(0, 186, 186, 0.3);
+            border-top-left-radius: 4px;
+        }
+
+        .msg-row.bot .msg-bubble {
+            border-top-right-radius: 4px;
+            width: 100%;
+        }
+
+        /* Markdown Rendering */
+        .msg-bubble h3 {
+            font-size: 16px;
+            margin: 14px 0 8px 0;
+            color: var(--primary);
+            font-weight: 900;
+        }
+        .msg-bubble h3:first-child {
+            margin-top: 0;
+        }
+        .msg-bubble p {
+            margin-bottom: 10px;
+        }
+        .msg-bubble ul, .msg-bubble ol {
+            margin: 10px 22px 14px 0;
+        }
+        .msg-bubble li {
+            margin-bottom: 6px;
+        }
+        .msg-bubble code:not(pre code) {
+            background: rgba(0, 186, 186, 0.12);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .msg-bubble pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            overflow-x: auto;
+            position: relative;
+            direction: ltr;
+            text-align: left;
+        }
+        .msg-bubble pre code {
+            font-family: 'Fira Code', monospace;
+            font-size: 13.5px;
+            line-height: 1.5;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-code-btn:hover {
+            background: var(--primary);
+            color: #06090e;
+        }
+
+        /* Citations & Suggestions Chips */
+        .citations-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border-subtle);
+        }
+
+        .citation-pill {
+            background: rgba(0, 186, 186, 0.08);
+            border: 1px solid rgba(0, 186, 186, 0.25);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .citation-pill:hover {
+            background: var(--primary);
+            color: #06090e;
+        }
+
+        .suggestions-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .suggestion-chip {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            color: var(--text-sec);
+            padding: 5px 12px;
+            border-radius: 14px;
+            font-size: 12.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .suggestion-chip:hover {
+            border-color: var(--primary);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        /* Chat Input Bar */
+        .chat-input-box {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-card);
+            background: var(--bg-surface);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--text-main);
+            font-size: 14.5px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 186, 186, 0.15);
+        }
+
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="brand-box">
+            <div class="brand-logo">☁️</div>
+            <div class="brand-title">
+                <h1>دستیار هوشمند مستندات ابری لیارا <span class="badge-agent">Agentic RAG v2.0</span></h1>
+                <span>پاسخگویی فنی، عیب‌یابی خطاها و تولید خودکار کانفیگ بر پایه ۲,۲۸۷ سند رسمی</span>
+            </div>
+        </div>
+
+        <div class="navbar-actions">
+            <button type="button" class="btn btn-secondary" id="theme_toggle_btn">
+                ☀️ تم روشن
+            </button>
+            <a href="https://docs.liara.ir" target="_blank" class="btn btn-secondary">
+                📖 وب‌سایت مستندات لیارا
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">🎯 فیلتر پلتفرم و تکنولوژی</div>
+                <div class="platform-pills">
+                    <button class="plat-btn active" data-plat="">همه پلتفرم‌ها</button>
+                    <button class="plat-btn" data-plat="nodejs">NodeJS</button>
+                    <button class="plat-btn" data-plat="laravel">Laravel</button>
+                    <button class="plat-btn" data-plat="django">Django</button>
+                    <button class="plat-btn" data-plat="nextjs">Next.js</button>
+                    <button class="plat-btn" data-plat="docker">Docker</button>
+                    <button class="plat-btn" data-plat="python">Python</button>
+                    <button class="plat-btn" data-plat="postgres">Postgres</button>
+                    <button class="plat-btn" data-plat="mysql">MySQL</button>
+                    <button class="plat-btn" data-plat="redis">Redis</button>
+                    <button class="plat-btn" data-plat="iaas">سرور ابری</button>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">⚡ آمار موتور Hybrid RAG</div>
+                <ul class="stats-list">
+                    <li><span>تعداد مستندات ایندکس‌شده:</span> <strong>۲,۲۸۷ سند</strong></li>
+                    <li><span>موتور جستجو:</span> <strong>BM25 + RRF Hybrid</strong></li>
+                    <li><span>میانگین زمان پاسخ:</span> <strong>< 15ms</strong></li>
+                    <li><span>دقت استناد منبع:</span> <strong>۱۰۰٪ URL رسمی</strong></li>
+                    <li><span>سطح دسترس‌پذیری:</span> <strong>WCAG 2.1 AAA</strong></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">💡 پرسش‌های پرتکرار و سناریوها</div>
+                <div class="suggestions-bar" style="margin-top: 0;">
+                    <div class="suggestion-chip" onclick="askQuick('چطور پروژه لاراول رو به دیتابیس MySQL لیارا وصل کنم؟')">🐘 لاراول + دیتابیس MySQL</div>
+                    <div class="suggestion-chip" onclick="askQuick('علت خطای 502 Bad Gateway در لیارا چیه و چطور حل کنم؟')">⚠️ رفع خطای 502 Bad Gateway</div>
+                    <div class="suggestion-chip" onclick="askQuick('نمونه فایل liara.json برای نودجی‌اس و نکست‌جی‌اس')">⚙️ تولید خودکار liara.json</div>
+                    <div class="suggestion-chip" onclick="askQuick('چطور دیسک ابری دائمی (Persistent Disk) بسازم؟')">💾 ساخت دیسک ابری دائمی</div>
+                    <div class="suggestion-chip" onclick="askQuick('پیکربندی استقرار خودکار با GitHub Actions در لیارا')">🚀 CI/CD با گیت‌هاب اکشن</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <div class="chat-messages" id="chat_messages">
+                <!-- Welcome Message -->
+                <div class="msg-row bot">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-bubble">
+                        <h3>سلام! من دستیار هوشمند و عامل خودمختار مستندات پلتفرم ابری لیارا هستم. ☁️</h3>
+                        <p>می‌توانید هر سوال فنی، سناریوی استقرار، اتصال دیتابیس، رفع ارور ۵۰۲ یا درخواست تولید فایل کانفیگ <code>liara.json</code> را بپرسید تا با استناد دقیق به مستندات رسمی لیارا پاسخ دهم.</p>
+                        
+                        <div class="suggestions-bar">
+                            <div class="suggestion-chip" onclick="askQuick('چطور پروژه جنگو رو در لیارا مستقر کنم؟')">🐍 استقرار جنگو (Django)</div>
+                            <div class="suggestion-chip" onclick="askQuick('نحوه اتصال دامنه اختصاصی و فعال‌سازی SSL')">🌐 دامنه اختصاصی و SSL</div>
+                            <div class="suggestion-chip" onclick="askQuick('فایل liara.json برای پروژه داکر با دیسک')">🐳 داکر + دیسک دائمی</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Box -->
+            <form class="chat-input-box" id="chat_form">
+                <input type="text" id="chat_input" class="chat-input" placeholder="سوال فنی یا خطای خود را بنویسید (مثلاً: چطور پورت لاراول رو تنظیم کنم؟)..." autocomplete="off" required>
+                <button type="submit" class="btn btn-primary" id="send_btn" style="padding: 14px 22px;">
+                    🚀 ارسال
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        let currentPlatform = "";
+
+        // Theme Switcher
+        const savedTheme = localStorage.getItem('liara_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeToggleBtn(savedTheme);
+
+        document.getElementById('theme_toggle_btn').addEventListener('click', function() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('liara_theme', next);
+            updateThemeToggleBtn(next);
+        });
+
+        function updateThemeToggleBtn(theme) {
+            document.getElementById('theme_toggle_btn').innerText = theme === 'dark' ? '☀️ تم روشن' : '🌙 تم تاریک';
+        }
+
+        // Platform Filter Chips
+        document.querySelectorAll('.plat-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentPlatform = this.dataset.plat;
+            });
+        });
+
+        // Chat Form Handler
+        const chatForm = document.getElementById('chat_form');
+        const chatInput = document.getElementById('chat_input');
+        const chatMessages = document.getElementById('chat_messages');
+        const sendBtn = document.getElementById('send_btn');
+
+        chatForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const msg = chatInput.value.trim();
+            if (!msg) return;
+
+            appendUserMessage(msg);
+            chatInput.value = '';
+            sendBtn.disabled = true;
+            sendBtn.innerText = '⏳ در حال جستجو...';
+
+            const loadingId = appendLoadingMessage();
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg, platform: currentPlatform })
+                });
+                const data = await res.json();
+                removeLoadingMessage(loadingId);
+                appendBotMessage(data);
+            } catch (err) {
+                removeLoadingMessage(loadingId);
+                appendBotMessage({
+                    reply: '❌ متاسفانه در برقراری ارتباط با سرور خطایی رخ داد. لطفاً مجدداً تلاش نمایید.',
+                    citations: [],
+                    suggestions: []
+                });
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerText = '🚀 ارسال';
+            }
+        });
+
+        function askQuick(text) {
+            chatInput.value = text;
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+
+        function appendUserMessage(text) {
+            const row = document.createElement('div');
+            row.className = 'msg-row user';
+            row.innerHTML = `
+                <div class="msg-avatar">👤</div>
+                <div class="msg-bubble">${escapeHtml(text)}</div>
+            `;
+            chatMessages.appendChild(row);
+            scrollToBottom();
+        }
+
+        function appendLoadingMessage() {
+            const id = 'loading_' + Date.now();
+            const row = document.createElement('div');
+            row.className = 'msg-row bot';
+            row.id = id;
+            row.innerHTML = `
+                <div class="msg-avatar">🤖</div>
+                <div class="msg-bubble"><em>🔍 در حال جستجوی هیبریدی میان ۲,۲۸۷ سند و تحلیل پاسخ...</em></div>
+            `;
+            chatMessages.appendChild(row);
+            scrollToBottom();
+            return id;
+        }
+
+        function removeLoadingMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function appendBotMessage(data) {
+            const row = document.createElement('div');
+            row.className = 'msg-row bot';
+            
+            const rawHtml = marked.parse(data.reply || '');
+
+            let citationsHtml = '';
+            if (data.citations && data.citations.length > 0) {
+                citationsHtml = '<div class="citations-bar"><span style="font-size:12px;color:var(--text-sec);display:flex;align-items:center;gap:4px;">🔗 مستندات رسمی مرتبط:</span>';
+                data.citations.forEach(c => {
+                    citationsHtml += `<a href="${c.url}" target="_blank" class="citation-pill">📄 ${c.title} — ${c.section} ↗</a>`;
+                });
+                citationsHtml += '</div>';
+            }
+
+            let suggestionsHtml = '';
+            if (data.suggestions && data.suggestions.length > 0) {
+                suggestionsHtml = '<div class="suggestions-bar">';
+                data.suggestions.forEach(s => {
+                    suggestionsHtml += `<div class="suggestion-chip" onclick="askQuick('${escapeHtml(s)}')">💡 ${s}</div>`;
+                });
+                suggestionsHtml += '</div>';
+            }
+
+            row.innerHTML = `
+                <div class="msg-avatar">🤖</div>
+                <div class="msg-bubble">
+                    ${rawHtml}
+                    ${citationsHtml}
+                    ${suggestionsHtml}
+                </div>
+            `;
+            chatMessages.appendChild(row);
+            
+            // Highlight code blocks and add 1-click copy buttons
+            row.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+                const pre = block.parentElement;
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-code-btn';
+                copyBtn.innerText = '📋 کپی کد';
+                copyBtn.onclick = function() {
+                    navigator.clipboard.writeText(block.innerText);
+                    copyBtn.innerText = '✅ کپی شد!';
+                    setTimeout(() => copyBtn.innerText = '📋 کپی کد', 2000);
+                };
+                pre.appendChild(copyBtn);
+            });
+
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>

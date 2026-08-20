@@ -1,0 +1,5 @@
+{
+  "app": "liara-agentic-docs-assistant",
+  "port": 3012,
+  "platform": "docker"
+}
