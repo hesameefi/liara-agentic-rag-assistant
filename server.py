@@ -562,6 +562,155 @@ def config_generator_endpoint(payload: Dict[str, Any]):
     cfg = generate_liara_json(platform, port, disk_name, mount_path, app_name)
     return {"status": "success", "config": cfg}
 
+@app.post("/api/tools/analyze-error")
+def analyze_error_endpoint(payload: Dict[str, Any]):
+    error_log = payload.get("log", "").strip()
+    if not error_log:
+        raise HTTPException(status_code=400, detail="Error log text cannot be empty.")
+    
+    error_lower = error_log.lower()
+    root_cause = "خطای عمومی اجرای برنامه در محیط ابری"
+    fix_command = "بررسی لاگ‌های برنامه با دستور: liara logs"
+    fix_details = "لطفاً لاگ کامل را با اجرای دستور liara logs --app <app-name> بررسی نمایید."
+    target_file = "liara.json / .env"
+
+    if "502" in error_lower or "bad gateway" in error_lower:
+        root_cause = "عدم تطابق پورت برنامه (Port Mismatch) یا کرش کردن برنامه حین استارت‌آپ"
+        fix_command = "تنظیم دقیق پورت در فایل liara.json یا متغیر PORT"
+        fix_details = "لیارا به صورت پیش‌فرض ترافیک را به پورت مشخص‌شده در liara.json هدایت می‌کند. اگر برنامه شما روی پورت دیگری (مثلاً 8000 یا 3000) گوش می‌دهد، مقدار port را در liara.json اصلاح کنید یا مطمئن شوید که برنامه روی 0.0.0.0 گوش می‌دهد (نه فقط 127.0.0.1)."
+        target_file = "liara.json: \"port\": 3000"
+    elif "econnrefused" in error_lower or "127.0.0.1:" in error_lower or "database" in error_lower:
+        root_cause = "تلاش برای اتصال به دیتابیس با آدرس لوکال (localhost/127.0.0.1) به جای هاست اختصاصی لیارا"
+        fix_command = "تنظیم Host و Port دیتابیس از بخش متغیرهای محیطی در پنل لیارا"
+        fix_details = "در محیط ابری لیارا، هر دیتابیس یک HostName و Port اختصاصی در شبکه خصوصی دارد (مثلاً DB_HOST=iran-db.liara.cloud). نباید از localhost یا 127.0.0.1 استفاده شود."
+        target_file = ".env -> DB_HOST & DB_PORT"
+    elif "disallowedhost" in error_lower or "allowed_hosts" in error_lower:
+        root_cause = "تنظیم نبودن دامنه‌های مجاز در تنظیمات جنگو (Django ALLOWED_HOSTS)"
+        fix_command = "افزودن دامنه‌ها به ALLOWED_HOSTS در settings.py"
+        fix_details = "در فایل settings.py پروژه جنگو، متغیر ALLOWED_HOSTS را به صورت ALLOWED_HOSTS = ['*'] یا شامل دامنه‌ی liara.run و دامنه‌ی اختصاصی خود تنظیم کنید."
+        target_file = "settings.py -> ALLOWED_HOSTS = ['*']"
+    elif "storage" in error_lower and ("permission" in error_lower or "denied" in error_lower or "link" in error_lower):
+        root_cause = "عدم ایجاد سیم‌لینک دیسک ابری در لاراول یا خطای دسترسی پوشه storage"
+        fix_command = "افزودن دستور php artisan storage:link در دستور استارت یا ساخت دیسک دائمی"
+        fix_details = "برای ذخیره فایل‌ها در لاراول، باید دیسک ابری دائمی ساخته و به مسیر /app/storage/app مانت شود، سپس دستور php artisan storage:link اجرا گردد."
+        target_file = "liara.json -> disks configuration"
+    elif "404" in error_lower and "nginx" in error_lower:
+        root_cause = "عدم بازنویسی روت‌ها در برنامه‌های تک‌صفحه‌ای (SPA Routing Fallback)"
+        fix_command = "ایجاد فایل liara_nginx.conf با try_files $uri $uri/ /index.html;"
+        fix_details = "در فریم‌ورک‌های React، Vue و Angular هنگام رفرش در مسیرهای داخلی خطای 404 رخ می‌دهد. ساخت فایل liara_nginx.conf در ریشه پروژه این مشکل را برطرف می‌کند."
+        target_file = "liara_nginx.conf"
+
+    # Also search docs for extra context
+    search_docs = retriever.search(error_log[:100], top_k=2)
+
+    return {
+        "status": "success",
+        "root_cause": root_cause,
+        "fix_command": fix_command,
+        "fix_details": fix_details,
+        "target_file": target_file,
+        "related_docs": search_docs
+    }
+
+@app.post("/api/tools/generate-ci")
+def generate_ci_endpoint(payload: Dict[str, Any]):
+    app_name = payload.get("app_name", "my-app").strip()
+    branch = payload.get("branch", "main").strip()
+    platform = payload.get("platform", "node").strip()
+
+    ci_yaml = f"""name: CD-Liara
+
+on:
+  push:
+    branches:
+      - {branch}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Liara Cloud
+        uses: liara-cloud/action@v1
+        with:
+          api-token: ${{{{ secrets.LIARA_API_TOKEN }}}}
+          app: {app_name}
+          platform: {platform}
+"""
+    return {
+        "status": "success",
+        "filename": ".github/workflows/liara.yml",
+        "yaml": ci_yaml,
+        "instructions": "فایل فوق را در مسیر .github/workflows/liara.yml قرار داده و توکن دسترسی لیارا را در بخش GitHub Repo -> Settings -> Secrets -> Actions با نام LIARA_API_TOKEN ذخیره کنید."
+    }
+
+@app.post("/api/tools/generate-nginx")
+def generate_nginx_endpoint(payload: Dict[str, Any]):
+    is_spa = payload.get("is_spa", True)
+    max_body = payload.get("max_body_size", "50M")
+    gzip = payload.get("gzip", True)
+
+    nginx_conf = f"""# Liara Custom Nginx Configuration
+location / {{
+  {('try_files $uri $uri/ /index.html;' if is_spa else 'try_files $uri $uri/ =404;')}
+}}
+
+client_max_body_size {max_body};
+
+{'''# Gzip Compression
+gzip on;
+gzip_disable "msie6";
+gzip_vary on;
+gzip_proxied any;
+gzip_comp_level 6;
+gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;''' if gzip else ''}
+
+# Security Headers
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header X-Content-Type-Options "nosniff" always;
+"""
+    return {
+        "status": "success",
+        "filename": "liara_nginx.conf",
+        "config": nginx_conf.strip(),
+        "instructions": "این فایل را با نام liara_nginx.conf در ریشه پروژه خود (کنار package.json یا index.html) قرار دهید."
+    }
+
+@app.post("/api/tools/convert-env")
+def convert_env_endpoint(payload: Dict[str, Any]):
+    raw_env = payload.get("raw_env", "").strip()
+    app_name = payload.get("app_name", "").strip()
+
+    if not raw_env:
+        raise HTTPException(status_code=400, detail="Environment variables text is empty.")
+
+    env_dict = {}
+    cli_pairs = []
+
+    for line in raw_env.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        k = k.strip()
+        v = v.strip().strip("'").strip('"')
+        env_dict[k] = v
+        cli_pairs.append(f"{k}={v}")
+
+    app_flag = f" --app {app_name}" if app_name else ""
+    cli_command = f"liara env:set {' '.join(cli_pairs)}{app_flag}"
+
+    return {
+        "status": "success",
+        "count": len(env_dict),
+        "cli_command": cli_command,
+        "json_env": env_dict
+    }
+
 @app.get("/api/search")
 def search_endpoint(q: str, platform: Optional[str] = None, limit: int = 5):
     results = retriever.search(q, platform_filter=platform, top_k=limit)
@@ -591,5 +740,5 @@ def serve_portal():
     return "<h1>Liara AI Assistant Portal Loading...</h1>"
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 3012))
+    port = int(os.getenv("PORT", 3025))
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)

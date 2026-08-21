@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دستیار هوشمند و عامل خودمختار مستندات ابری لیارا | Liara AI Documentation Studio</title>
-    <meta name="description" content="عامل هوشمند پشتیبانی فنی، استقرار، تولید کانفیگ و عیب‌یابی مستندات پلتفرم ابری لیارا با موتور Hybrid RAG.">
+    <meta name="description" content="عامل هوشمند پشتیبانی فنی، استقرار، تولید کانفیگ و عیب‌یابی مستندات پلتفرم ابری لیارا با موتور Hybrid RAG و جعبه‌ابزار توسعه‌دهنده.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%2300baba'/><path d='M44 38c3.3 0 6-2.7 6-6 0-3-2.2-5.5-5.1-5.9C43.5 21.6 39.2 18 34 18c-4.4 0-8.2 2.6-9.9 6.4C23.5 24.1 22.8 24 22 24c-4.4 0-8 3.6-8 8s3.6 8 8 8h22z' fill='%23ffffff'/></svg>">
 
     <!-- Fonts & Markdown / Syntax Highlight Libraries -->
@@ -38,17 +38,17 @@
         :root, [data-theme="dark"] {
             --bg-body: #06090e;
             --bg-sidebar: #090e15;
-            --bg-header: rgba(9, 14, 21, 0.85);
+            --bg-header: rgba(9, 14, 21, 0.88);
             --bg-surface: #0e1622;
             --bg-card: #131d2b;
             --bg-card-hover: #182435;
             --bg-user-msg: #0b2530;
             --bg-bot-msg: #0e1622;
             --border-card: #1e2c40;
-            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-subtle: rgba(255, 255, 255, 0.08);
             --primary: #00baba;
             --primary-hover: #00e0e0;
-            --primary-glow: rgba(0, 186, 186, 0.25);
+            --primary-glow: rgba(0, 186, 186, 0.28);
             --text-main: #f8fafc;
             --text-sec: #94a3b8;
             --text-muted: #64748b;
@@ -56,12 +56,14 @@
             --code-bg: #070b10;
             --accent-green: #10b981;
             --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-indigo: #6366f1;
         }
 
         [data-theme="light"] {
             --bg-body: #f8fafc;
             --bg-sidebar: #ffffff;
-            --bg-header: rgba(255, 255, 255, 0.88);
+            --bg-header: rgba(255, 255, 255, 0.9);
             --bg-surface: #f1f5f9;
             --bg-card: #ffffff;
             --bg-card-hover: #f8fafc;
@@ -71,7 +73,7 @@
             --border-subtle: #e2e8f0;
             --primary: #009e9e;
             --primary-hover: #008282;
-            --primary-glow: rgba(0, 158, 158, 0.15);
+            --primary-glow: rgba(0, 158, 158, 0.18);
             --text-main: #0f172a;
             --text-sec: #475569;
             --text-muted: #64748b;
@@ -79,6 +81,8 @@
             --code-bg: #0f172a;
             --accent-green: #059669;
             --accent-amber: #d97706;
+            --accent-rose: #e11d48;
+            --accent-indigo: #4f46e5;
         }
 
         * {
@@ -160,7 +164,7 @@
         }
 
         .brand-title h1 {
-            font-size: 16.5px;
+            font-size: 16px;
             font-weight: 800;
             color: var(--text-main);
             display: flex;
@@ -233,6 +237,17 @@
             color: var(--primary);
         }
 
+        .btn-devkit {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(0, 186, 186, 0.15) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            color: #a5b4fc;
+        }
+        .btn-devkit:hover {
+            border-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+        }
+
         /* Collapsible Unified Sidebar */
         .sidebar {
             width: 340px;
@@ -273,9 +288,9 @@
             background: transparent;
             border: none;
             color: var(--text-sec);
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
-            padding: 6px 4px;
+            padding: 6px 3px;
             border-radius: 7px;
             cursor: pointer;
             transition: all 0.2s;
@@ -403,7 +418,7 @@
             font-size: 16px;
         }
 
-        /* Telemetry Card */
+        /* Telemetry & Quick Action Cards */
         .telemetry-card {
             background: var(--bg-surface);
             border: 1px solid var(--border-card);
@@ -442,32 +457,27 @@
             font-family: monospace;
         }
 
-        /* Config Builder Form in Sidebar */
-        .config-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .form-group label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-sec);
-            margin-bottom: 4px;
-            display: block;
-        }
-        .form-input {
-            width: 100%;
+        .quick-tool-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-card);
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 13px;
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: right;
             color: var(--text-main);
-            outline: none;
-            transition: border-color 0.2s;
+            font-size: 12.5px;
+            font-weight: 700;
         }
-        .form-input:focus {
+        .quick-tool-btn:hover {
             border-color: var(--primary);
+            background: var(--bg-card);
+            color: var(--primary);
+            transform: translateY(-1px);
         }
 
         /* Main Chat Experience */
@@ -508,7 +518,7 @@
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 24px 32px 120px 32px;
+            padding: 24px 32px 130px 32px;
             display: flex;
             flex-direction: column;
             gap: 24px;
@@ -517,7 +527,7 @@
 
         /* Center Content Wrapper for wide screens */
         .msg-thread-item {
-            max-width: 860px;
+            max-width: 880px;
             width: 100%;
             margin: 0 auto;
             display: flex;
@@ -773,7 +783,7 @@
         }
 
         .quick-prompts-carousel {
-            max-width: 860px;
+            max-width: 880px;
             width: 100%;
             display: flex;
             gap: 8px;
@@ -804,7 +814,7 @@
         }
 
         .chat-input-box {
-            max-width: 860px;
+            max-width: 880px;
             width: 100%;
             background: var(--bg-card);
             border: 1px solid var(--border-card);
@@ -835,25 +845,6 @@
             padding: 6px 4px;
         }
 
-        .input-action-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-        .input-action-btn:hover {
-            color: var(--text-main);
-            background: var(--bg-surface);
-        }
-
         .send-btn {
             background: var(--primary);
             color: #06090e;
@@ -881,11 +872,11 @@
             transform: none;
         }
 
-        /* Config Modal Drawer */
+        /* DevKit Mega Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
             z-index: 200;
             display: none;
@@ -900,10 +891,12 @@
             background: var(--bg-card);
             border: 1px solid var(--border-card);
             border-radius: 20px;
-            max-width: 600px;
+            max-width: 720px;
             width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
             padding: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -919,6 +912,9 @@
             font-size: 17px;
             font-weight: 800;
             color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .modal-close-btn {
             background: transparent;
@@ -926,6 +922,115 @@
             color: var(--text-muted);
             font-size: 20px;
             cursor: pointer;
+        }
+
+        .devkit-nav {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-surface);
+            padding: 4px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        .devkit-tab-btn {
+            flex: 1;
+            padding: 8px 10px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-sec);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .devkit-tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        .devkit-pane {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .devkit-pane.active {
+            display: flex;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-sec);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .form-input, .form-textarea {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 13px;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-textarea {
+            font-family: 'Fira Code', monospace;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .output-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 8px;
+            direction: ltr;
+            text-align: left;
+            position: relative;
+            display: none;
+        }
+        .output-box code {
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+
+        .diagnosis-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+            display: none;
+        }
+        .diagnosis-card.open {
+            display: flex;
+        }
+        .diagnosis-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12.5px;
+        }
+        .diagnosis-label {
+            font-weight: 800;
+            color: var(--text-muted);
+        }
+        .diagnosis-value {
+            color: var(--text-main);
+            font-weight: 600;
         }
 
         /* Responsive Breakpoints */
@@ -943,7 +1048,7 @@
                 width: 300px;
             }
             .chat-messages {
-                padding: 16px 16px 120px 16px;
+                padding: 16px 16px 130px 16px;
             }
             .chat-input-wrapper {
                 padding: 12px 16px 18px 16px;
@@ -967,8 +1072,8 @@
         </div>
 
         <div class="navbar-actions">
-            <button type="button" class="btn btn-secondary" onclick="openConfigModal()">
-                ⚙️ تولید liara.json
+            <button type="button" class="btn btn-devkit" onclick="openDevKitModal('config')">
+                🛠️ جعبه‌ابزار توسعه‌دهنده
             </button>
             <button type="button" class="btn btn-secondary" id="theme_toggle_btn">
                 ☀️ تم روشن
@@ -988,6 +1093,7 @@
                 <div class="sidebar-tabs">
                     <button class="sidebar-tab-btn active" data-tab="history">💬 گفتگوها</button>
                     <button class="sidebar-tab-btn" data-tab="platforms">🏷️ پلتفرم‌ها</button>
+                    <button class="sidebar-tab-btn" data-tab="tools">🛠️ ابزارها</button>
                     <button class="sidebar-tab-btn" data-tab="telemetry">⚡ تله‌متری</button>
                 </div>
             </div>
@@ -1022,7 +1128,46 @@
                     </div>
                 </div>
 
-                <!-- Pane 3: Telemetry & Engine -->
+                <!-- Pane 3: Quick Dev Tools -->
+                <div class="sidebar-pane" id="pane-tools">
+                    <button class="quick-tool-btn" onclick="openDevKitModal('config')">
+                        <span>⚙️</span>
+                        <div>
+                            <div>تولید فایل liara.json</div>
+                            <div style="font-size:11px;color:var(--text-muted);font-weight:400;">پیکربندی خودکار پورت و دیسک</div>
+                        </div>
+                    </button>
+                    <button class="quick-tool-btn" onclick="openDevKitModal('doctor')">
+                        <span>🩺</span>
+                        <div>
+                            <div>دیباگر خطای ۵۰۲ و لاگ</div>
+                            <div style="font-size:11px;color:var(--text-muted);font-weight:400;">تحلیل فوری و دستور رفع ارور</div>
+                        </div>
+                    </button>
+                    <button class="quick-tool-btn" onclick="openDevKitModal('ci')">
+                        <span>🚀</span>
+                        <div>
+                            <div>پایپ‌لاین CI/CD گیت‌هاب</div>
+                            <div style="font-size:11px;color:var(--text-muted);font-weight:400;">تولید .github/workflows/liara.yml</div>
+                        </div>
+                    </button>
+                    <button class="quick-tool-btn" onclick="openDevKitModal('nginx')">
+                        <span>🌐</span>
+                        <div>
+                            <div>کانفیگ liara_nginx.conf</div>
+                            <div style="font-size:11px;color:var(--text-muted);font-weight:400;">روتینگ SPA و فشرده‌سازی Gzip</div>
+                        </div>
+                    </button>
+                    <button class="quick-tool-btn" onclick="openDevKitModal('env')">
+                        <span>🔄</span>
+                        <div>
+                            <div>مبدل فایل .env به CLI</div>
+                            <div style="font-size:11px;color:var(--text-muted);font-weight:400;">تبدیل متغیرها به دستور liara env:set</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Pane 4: Telemetry & Engine -->
                 <div class="sidebar-pane" id="pane-telemetry">
                     <div class="telemetry-card">
                         <div class="telemetry-title">⚡ وضعیت موتور جستجوی هیبریدی</div>
@@ -1031,17 +1176,9 @@
                             <li><span>مدل جستجو:</span> <strong>BM25 + RRF Hybrid</strong></li>
                             <li><span>میانگین سرعت پاسخ:</span> <strong>< 15ms</strong></li>
                             <li><span>دقت استناد منبع:</span> <strong>۱۰۰٪ URL رسمی</strong></li>
-                            <li><span>تولید کانفیگ:</span> <strong>خودکار (JSON)</strong></li>
+                            <li><span>جعبه‌ابزار توسعه:</span> <strong>۵ ابزار فعال</strong></li>
                             <li><span>دسترس‌پذیری:</span> <strong>WCAG 2.1 AAA</strong></li>
                         </ul>
-                    </div>
-
-                    <div class="telemetry-card">
-                        <div class="telemetry-title">🛠️ ابزار سریع تولید کانفیگ</div>
-                        <p style="font-size:12px;color:var(--text-sec);margin-bottom:8px;">تولید فوری فایل <code>liara.json</code> برای هر پلتفرم همراه با دیسک و پورت.</p>
-                        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="openConfigModal()">
-                            ⚙️ باز کردن ابزار ساخت
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1068,7 +1205,7 @@
                     <div class="msg-content-box">
                         <div class="msg-bubble">
                             <h3>سلام! من دستیار هوشمند و عامل خودمختار مستندات پلتفرم ابری لیارا هستم. ☁️</h3>
-                            <p>با دسترسی کامل به <strong>۲,۲۸۷ سند رسمی</strong>، آماده‌ام در استقرار پروژه‌ها، اتصال دیتابیس، رفع خطاهای ۵۰۲، تنظیم دیسک ابری و تولید خودکار فایل کانفیگ <code>liara.json</code> به شما کمک کنم.</p>
+                            <p>با تسلط کامل بر <strong>۲,۲۸۷ سند رسمی</strong> و ۵ ابزار مهندسی توسعه، آماده‌ام در استقرار، اتصال دیتابیس، رفع ارور ۵۰۲، تنظیم دیسک ابری و پایپ‌لاین‌های CI/CD به شما کمک کنم.</p>
                             
                             <div class="suggestions-container">
                                 <div class="suggestion-chip" onclick="askQuick('چطور پروژه لاراول رو به دیتابیس PostgreSQL لیارا وصل کنم؟')">🐘 لاراول + دیتابیس PostgreSQL</div>
@@ -1078,7 +1215,7 @@
                             </div>
                         </div>
                         <div class="msg-meta-bar">
-                            <span>پاسخگوی هوشمند لیارا</span> • <span class="latency-badge">Hybrid RAG Ready</span>
+                            <span>دستیار هوشمند لیارا</span> • <span class="latency-badge">Hybrid RAG Ready</span>
                         </div>
                     </div>
                 </div>
@@ -1106,14 +1243,25 @@
         </main>
     </div>
 
-    <!-- Modal for Config Generator -->
-    <div class="modal-overlay" id="config_modal">
+    <!-- Mega Modal for Liara Developer Super-Toolkit -->
+    <div class="modal-overlay" id="devkit_modal">
         <div class="modal-card">
             <div class="modal-header">
-                <h3>⚙️ ابزار تولید خودکار فایل liara.json</h3>
-                <button type="button" class="modal-close-btn" onclick="closeConfigModal()">✕</button>
+                <h3>🛠️ جعبه‌ابزار تخصصی توسعه‌دهنده لیارا (Liara DevKit)</h3>
+                <button type="button" class="modal-close-btn" onclick="closeDevKitModal()">✕</button>
             </div>
-            <div class="config-form">
+
+            <!-- DevKit Tab Bar -->
+            <div class="devkit-nav">
+                <button class="devkit-tab-btn active" data-dtab="config" onclick="switchDevKitTab('config')">⚙️ تولید liara.json</button>
+                <button class="devkit-tab-btn" data-dtab="doctor" onclick="switchDevKitTab('doctor')">🩺 تحلیل لاگ و ارور ۵۰۲</button>
+                <button class="devkit-tab-btn" data-dtab="ci" onclick="switchDevKitTab('ci')">🚀 گیت‌هاب اکشن (CI/CD)</button>
+                <button class="devkit-tab-btn" data-dtab="nginx" onclick="switchDevKitTab('nginx')">🌐 کانفیگ Nginx</button>
+                <button class="devkit-tab-btn" data-dtab="env" onclick="switchDevKitTab('env')">🔄 مبدل .env به CLI</button>
+            </div>
+
+            <!-- Tab 1: liara.json Generator -->
+            <div class="devkit-pane active" id="dtab-config">
                 <div class="form-group">
                     <label>پلتفرم برنامه:</label>
                     <select id="cfg_platform" class="form-input">
@@ -1135,19 +1283,112 @@
                     <input type="number" id="cfg_port" class="form-input" value="3000">
                 </div>
                 <div class="form-group">
-                    <label>نام دیسک ابری (اختیاری):</label>
+                    <label>نام دیسک ابری دائمی (اختیاری):</label>
                     <input type="text" id="cfg_disk_name" class="form-input" placeholder="uploads-data">
                 </div>
                 <div class="form-group">
                     <label>مسیر مانت دیسک (Mount Path):</label>
                     <input type="text" id="cfg_mount_path" class="form-input" placeholder="/app/uploads">
                 </div>
-                <button type="button" class="btn btn-primary" style="justify-content:center;margin-top:6px;" onclick="generateConfigAction()">
-                    ✨ تولید و کپی liara.json
+                <button type="button" class="btn btn-primary" style="justify-content:center;margin-top:6px;" onclick="runConfigGenerator()">
+                    ✨ ساخت و کپی liara.json
                 </button>
+                <div class="output-box" id="cfg_out_box">
+                    <code id="cfg_code_block" class="language-json"></code>
+                </div>
             </div>
-            <div id="cfg_output_box" style="display:none;margin-top:10px;">
-                <pre style="background:var(--code-bg);border:1px solid var(--border-card);border-radius:10px;padding:12px;direction:ltr;text-align:left;"><code id="cfg_code_block" class="language-json"></code></pre>
+
+            <!-- Tab 2: Error Log Quick Doctor -->
+            <div class="devkit-pane" id="dtab-doctor">
+                <div class="form-group">
+                    <label>متن لاگ یا پیام خطای ترمینال / کنسول را اینجا قرار دهید:</label>
+                    <textarea id="doc_error_input" class="form-textarea" placeholder="مثال: Error 502 Bad Gateway یا ECONNREFUSED 127.0.0.1:5432"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" style="justify-content:center;" onclick="runErrorDoctor()">
+                    🔍 تحلیل فوری و عیب‌یابی خطا
+                </button>
+
+                <div class="diagnosis-card" id="doc_result_card">
+                    <div class="diagnosis-item">
+                        <span class="diagnosis-label">❌ علت ریشه‌ای خطا (Root Cause):</span>
+                        <span class="diagnosis-value" id="doc_root_cause" style="color:var(--accent-rose);"></span>
+                    </div>
+                    <div class="diagnosis-item">
+                        <span class="diagnosis-label">🛠️ اقدام اصلاحی و دستور رفع (Action & Fix):</span>
+                        <span class="diagnosis-value" id="doc_fix_command" style="color:var(--accent-green);"></span>
+                    </div>
+                    <div class="diagnosis-item">
+                        <span class="diagnosis-label">📄 توضیحات فنی و فایل هدف:</span>
+                        <span class="diagnosis-value" id="doc_fix_details" style="color:var(--text-sec);"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: CI/CD Generator -->
+            <div class="devkit-pane" id="dtab-ci">
+                <div class="form-group">
+                    <label>نام برنامه در لیارا (App Name):</label>
+                    <input type="text" id="ci_app_name" class="form-input" value="my-app">
+                </div>
+                <div class="form-group">
+                    <label>شاخه استقرار (Branch):</label>
+                    <input type="text" id="ci_branch" class="form-input" value="main">
+                </div>
+                <div class="form-group">
+                    <label>پلتفرم برنامه:</label>
+                    <select id="ci_platform" class="form-input">
+                        <option value="node">Node.js</option>
+                        <option value="laravel">Laravel</option>
+                        <option value="django">Django</option>
+                        <option value="next">Next.js</option>
+                        <option value="docker">Docker</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" style="justify-content:center;" onclick="runCIGenerator()">
+                    🚀 تولید فایل .github/workflows/liara.yml
+                </button>
+                <div class="output-box" id="ci_out_box">
+                    <code id="ci_code_block" class="language-yaml"></code>
+                </div>
+            </div>
+
+            <!-- Tab 4: Nginx Generator -->
+            <div class="devkit-pane" id="dtab-nginx">
+                <div class="form-group">
+                    <label>پشتیبانی از روتینگ برنامه‌های تک‌صفحه‌ای (SPA React / Vue / Angular):</label>
+                    <select id="ngx_spa" class="form-input">
+                        <option value="true">بله - فعال‌سازی try_files به /index.html</option>
+                        <option value="false">خیر - وب‌سایت معمولی</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>حداکثر حجم آپلود (Client Max Body Size):</label>
+                    <input type="text" id="ngx_body_size" class="form-input" value="50M">
+                </div>
+                <button type="button" class="btn btn-primary" style="justify-content:center;" onclick="runNginxGenerator()">
+                    🌐 تولید فایل liara_nginx.conf
+                </button>
+                <div class="output-box" id="ngx_out_box">
+                    <code id="ngx_code_block" class="language-nginx"></code>
+                </div>
+            </div>
+
+            <!-- Tab 5: .env Converter -->
+            <div class="devkit-pane" id="dtab-env">
+                <div class="form-group">
+                    <label>محتوای فایل .env خود را کپی کنید:</label>
+                    <textarea id="env_raw_input" class="form-textarea" placeholder="DB_HOST=iran-db.liara.cloud&#10;DB_PORT=5432&#10;APP_DEBUG=false"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>نام برنامه در لیارا (اختیاری):</label>
+                    <input type="text" id="env_app_name" class="form-input" placeholder="my-app">
+                </div>
+                <button type="button" class="btn btn-primary" style="justify-content:center;" onclick="runEnvConverter()">
+                    🔄 تبدیل به دستور یک‌خطی liara env:set
+                </button>
+                <div class="output-box" id="env_out_box">
+                    <code id="env_code_block" class="language-bash"></code>
+                </div>
             </div>
         </div>
     </div>
@@ -1489,15 +1730,26 @@
             clearChatUI();
         }
 
-        // Config Modal Functions
-        function openConfigModal() {
-            document.getElementById('config_modal').classList.add('open');
+        // Mega DevKit Modal Functions
+        function openDevKitModal(tab = 'config') {
+            document.getElementById('devkit_modal').classList.add('open');
+            switchDevKitTab(tab);
         }
-        function closeConfigModal() {
-            document.getElementById('config_modal').classList.remove('open');
+        function closeDevKitModal() {
+            document.getElementById('devkit_modal').classList.remove('open');
         }
 
-        async function generateConfigAction() {
+        function switchDevKitTab(tabName) {
+            document.querySelectorAll('.devkit-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.devkit-pane').forEach(p => p.classList.remove('active'));
+            const activeBtn = document.querySelector(`.devkit-tab-btn[data-dtab="${tabName}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            const activePane = document.getElementById('dtab-' + tabName);
+            if (activePane) activePane.classList.add('active');
+        }
+
+        // 1. Run Config Generator
+        async function runConfigGenerator() {
             const platform = document.getElementById('cfg_platform').value;
             const appName = document.getElementById('cfg_app_name').value;
             const port = parseInt(document.getElementById('cfg_port').value) || 3000;
@@ -1508,23 +1760,112 @@
                 const res = await fetch('/api/generate-config', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        platform: platform,
-                        app_name: appName,
-                        port: port,
-                        disk_name: diskName,
-                        mount_path: mountPath
-                    })
+                    body: JSON.stringify({ platform, app_name: appName, port, disk_name: diskName, mount_path: mountPath })
                 });
                 const data = await res.json();
                 const jsonStr = JSON.stringify(data.config, null, 2);
                 document.getElementById('cfg_code_block').innerText = jsonStr;
                 hljs.highlightElement(document.getElementById('cfg_code_block'));
-                document.getElementById('cfg_output_box').style.display = 'block';
+                document.getElementById('cfg_out_box').style.display = 'block';
                 navigator.clipboard.writeText(jsonStr);
-                alert('✅ فایل liara.json با موفقیت تولید و در کلیپ‌بورد کپی شد!');
+                alert('✅ فایل liara.json تولید و در کلیپ‌بورد کپی شد!');
             } catch (err) {
                 alert('❌ خطا در تولید کانفیگ');
+            }
+        }
+
+        // 2. Run Error Log Doctor
+        async function runErrorDoctor() {
+            const logText = document.getElementById('doc_error_input').value.trim();
+            if (!logText) {
+                alert('لطفاً متن خطا یا لاگ را وارد نمایید.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/tools/analyze-error', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ log: logText })
+                });
+                const data = await res.json();
+                document.getElementById('doc_root_cause').innerText = data.root_cause;
+                document.getElementById('doc_fix_command').innerText = data.fix_command;
+                document.getElementById('doc_fix_details').innerText = data.fix_details + ' (فایل هدف: ' + data.target_file + ')';
+                document.getElementById('doc_result_card').classList.add('open');
+            } catch (err) {
+                alert('❌ خطا در تحلیل لاگ');
+            }
+        }
+
+        // 3. Run CI Generator
+        async function runCIGenerator() {
+            const appName = document.getElementById('ci_app_name').value.trim();
+            const branch = document.getElementById('ci_branch').value.trim();
+            const platform = document.getElementById('ci_platform').value;
+
+            try {
+                const res = await fetch('/api/tools/generate-ci', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ app_name: appName, branch, platform })
+                });
+                const data = await res.json();
+                document.getElementById('ci_code_block').innerText = data.yaml;
+                hljs.highlightElement(document.getElementById('ci_code_block'));
+                document.getElementById('ci_out_box').style.display = 'block';
+                navigator.clipboard.writeText(data.yaml);
+                alert('✅ پایپ‌لاین گیت‌هاب اکشن (.github/workflows/liara.yml) تولید و کپی شد!');
+            } catch (err) {
+                alert('❌ خطا در تولید فایل CI');
+            }
+        }
+
+        // 4. Run Nginx Generator
+        async function runNginxGenerator() {
+            const isSpa = document.getElementById('ngx_spa').value === 'true';
+            const bodySize = document.getElementById('ngx_body_size').value.trim() || '50M';
+
+            try {
+                const res = await fetch('/api/tools/generate-nginx', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_spa: isSpa, max_body_size: bodySize, gzip: true })
+                });
+                const data = await res.json();
+                document.getElementById('ngx_code_block').innerText = data.config;
+                hljs.highlightElement(document.getElementById('ngx_code_block'));
+                document.getElementById('ngx_out_box').style.display = 'block';
+                navigator.clipboard.writeText(data.config);
+                alert('✅ فایل liara_nginx.conf تولید و کپی شد!');
+            } catch (err) {
+                alert('❌ خطا در ساخت liara_nginx.conf');
+            }
+        }
+
+        // 5. Run .env Converter
+        async function runEnvConverter() {
+            const rawEnv = document.getElementById('env_raw_input').value.trim();
+            const appName = document.getElementById('env_app_name').value.trim();
+            if (!rawEnv) {
+                alert('لطفاً متغیرهای فایل .env را وارد نمایید.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/tools/convert-env', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raw_env: rawEnv, app_name: appName })
+                });
+                const data = await res.json();
+                document.getElementById('env_code_block').innerText = data.cli_command;
+                hljs.highlightElement(document.getElementById('env_code_block'));
+                document.getElementById('env_out_box').style.display = 'block';
+                navigator.clipboard.writeText(data.cli_command);
+                alert(`✅ تعداد ${data.count} متغیر به دستور یک‌خطی liara env:set تبدیل و کپی شد!`);
+            } catch (err) {
+                alert('❌ خطا در تبدیل فایل .env');
             }
         }
 
