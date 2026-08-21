@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دستیار هوشمند و عامل خودمختار مستندات ابری لیارا | Liara AI Documentation Agent</title>
+    <title>دستیار هوشمند و عامل خودمختار مستندات ابری لیارا | Liara AI Documentation Studio</title>
     <meta name="description" content="عامل هوشمند پشتیبانی فنی، استقرار، تولید کانفیگ و عیب‌یابی مستندات پلتفرم ابری لیارا با موتور Hybrid RAG.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%2300baba'/><path d='M44 38c3.3 0 6-2.7 6-6 0-3-2.2-5.5-5.1-5.9C43.5 21.6 39.2 18 34 18c-4.4 0-8.2 2.6-9.9 6.4C23.5 24.1 22.8 24 22 24c-4.4 0-8 3.6-8 8s3.6 8 8 8h22z' fill='%23ffffff'/></svg>">
 
-    <!-- Marked.js for Markdown & Highlight.js for Code Highlighting -->
+    <!-- Fonts & Markdown / Syntax Highlight Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -15,144 +15,198 @@
     <style>
         /* Typography */
         @font-face {
-            font-family: 'Yekan Bakh';
+            font-family: 'Vazirmatn';
             src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
             font-weight: 400;
         }
         @font-face {
-            font-family: 'Yekan Bakh';
+            font-family: 'Vazirmatn';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Medium.woff2') format('woff2');
+            font-weight: 500;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
             src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
             font-weight: 700;
         }
         @font-face {
-            font-family: 'Yekan Bakh';
+            font-family: 'Vazirmatn';
             src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Black.woff2') format('woff2');
             font-weight: 900;
         }
 
         :root, [data-theme="dark"] {
             --bg-body: #06090e;
-            --bg-header: rgba(12, 17, 24, 0.94);
-            --bg-surface: #0e141c;
-            --bg-card: #131b26;
-            --bg-user-msg: #0d2834;
-            --bg-bot-msg: #131b26;
-            --border-card: #1e293b;
-            --border-subtle: rgba(255, 255, 255, 0.08);
+            --bg-sidebar: #090e15;
+            --bg-header: rgba(9, 14, 21, 0.85);
+            --bg-surface: #0e1622;
+            --bg-card: #131d2b;
+            --bg-card-hover: #182435;
+            --bg-user-msg: #0b2530;
+            --bg-bot-msg: #0e1622;
+            --border-card: #1e2c40;
+            --border-subtle: rgba(255, 255, 255, 0.07);
             --primary: #00baba;
-            --primary-hover: #00d6d6;
+            --primary-hover: #00e0e0;
+            --primary-glow: rgba(0, 186, 186, 0.25);
             --text-main: #f8fafc;
             --text-sec: #94a3b8;
             --text-muted: #64748b;
-            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
-            --code-bg: #090d12;
+            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+            --code-bg: #070b10;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
         }
 
         [data-theme="light"] {
             --bg-body: #f8fafc;
-            --bg-header: rgba(255, 255, 255, 0.94);
+            --bg-sidebar: #ffffff;
+            --bg-header: rgba(255, 255, 255, 0.88);
             --bg-surface: #f1f5f9;
             --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
             --bg-user-msg: #e0f7f7;
             --bg-bot-msg: #ffffff;
             --border-card: #e2e8f0;
             --border-subtle: #e2e8f0;
-            --primary: #00baba;
-            --primary-hover: #009b9b;
+            --primary: #009e9e;
+            --primary-hover: #008282;
+            --primary-glow: rgba(0, 158, 158, 0.15);
             --text-main: #0f172a;
             --text-sec: #475569;
             --text-muted: #64748b;
             --shadow-card: 0 4px 20px -4px rgba(0, 0, 0, 0.06);
             --code-bg: #0f172a;
+            --accent-green: #059669;
+            --accent-amber: #d97706;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Yekan Bakh', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden;
             transition: background-color 0.25s ease, color 0.25s ease;
         }
 
-        /* Top Navbar */
+        /* App Shell Layout */
+        .app-shell {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 64px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Header Navbar */
         .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            height: 64px;
             background: var(--bg-header);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 14px 32px;
+            padding: 0 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 100;
+            flex-shrink: 0;
         }
 
         .brand-box {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .brand-logo {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #00baba 0%, #087373 100%);
-            border-radius: 12px;
+        .sidebar-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border-card);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 4px 16px rgba(0, 186, 186, 0.35);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .sidebar-toggle-btn:hover {
+            background: var(--bg-surface);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #00baba 0%, #086b6b 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 14px var(--primary-glow);
         }
 
         .brand-title h1 {
-            font-size: 19px;
-            font-weight: 900;
+            font-size: 16.5px;
+            font-weight: 800;
             color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .badge-agent {
-            background: rgba(0, 186, 186, 0.15);
-            color: var(--primary);
-            font-size: 11.5px;
-            font-weight: 800;
-            padding: 3px 9px;
-            border-radius: 16px;
-            border: 1px solid rgba(0, 186, 186, 0.3);
+        .badge-live-agent {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-green);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
         }
 
-        .brand-title span {
-            font-size: 12px;
-            color: var(--text-sec);
+        .badge-live-agent .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse-dot 1.8s infinite ease-in-out;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
         }
 
         .navbar-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 13.5px;
-            font-weight: 800;
+            padding: 7px 14px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
             border: 1px solid transparent;
             transition: all 0.2s ease;
@@ -162,6 +216,7 @@
         .btn-primary {
             background: var(--primary);
             color: #06090e;
+            box-shadow: 0 4px 12px var(--primary-glow);
         }
         .btn-primary:hover {
             background: var(--primary-hover);
@@ -175,126 +230,309 @@
         }
         .btn-secondary:hover {
             border-color: var(--primary);
+            color: var(--primary);
         }
 
-        /* Layout Container */
-        .app-container {
-            flex: 1;
-            max-width: 1300px;
-            width: 100%;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 24px;
-            padding: 24px;
-            box-sizing: border-box;
-        }
-
-        /* Sidebar */
+        /* Collapsible Unified Sidebar */
         .sidebar {
+            width: 340px;
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+            z-index: 50;
+            flex-shrink: 0;
+            overflow: hidden;
         }
 
-        .sidebar-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: var(--shadow-card);
+        .sidebar.collapsed {
+            width: 0;
+            border-left: none;
         }
 
-        .sidebar-title {
-            font-size: 14.5px;
-            font-weight: 900;
-            margin-bottom: 14px;
+        .sidebar-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--text-main);
+            justify-content: space-between;
         }
 
-        .platform-pills {
+        .sidebar-tabs {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            background: var(--bg-surface);
+            border-radius: 9px;
+            padding: 3px;
+            width: 100%;
+            gap: 2px;
         }
 
-        .plat-btn {
+        .sidebar-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-sec);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 4px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .sidebar-tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar-pane {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .sidebar-pane.active {
+            display: flex;
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 186, 186, 0.1);
+            border: 1px dashed var(--primary);
+            color: var(--primary);
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 13.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .new-chat-btn:hover {
+            background: var(--primary);
+            color: #06090e;
+        }
+
+        /* Chat History List */
+        .chat-history-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .chat-history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
             background: var(--bg-surface);
             border: 1px solid var(--border-card);
+            border-radius: 10px;
+            font-size: 13px;
             color: var(--text-sec);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12.5px;
-            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .plat-btn:hover, .plat-btn.active {
-            background: var(--primary);
-            color: #06090e;
-            font-weight: 900;
+        .chat-history-item:hover, .chat-history-item.active {
             border-color: var(--primary);
+            color: var(--text-main);
+            background: var(--bg-card);
+        }
+        .chat-history-item .title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+        }
+        .chat-history-item .del-btn {
+            opacity: 0.4;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        .chat-history-item:hover .del-btn {
+            opacity: 1;
         }
 
-        .stats-list {
-            list-style: none;
+        /* Platform Grid Pills */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
-        .stats-list li {
+
+        .platform-card-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 9px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-sec);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: right;
+        }
+        .platform-card-btn:hover, .platform-card-btn.active {
+            background: var(--bg-card);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .platform-card-btn .plat-icon {
+            font-size: 16px;
+        }
+
+        /* Telemetry Card */
+        .telemetry-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .telemetry-title {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .telemetry-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .telemetry-list li {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px dashed var(--border-subtle);
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-sec);
+            border-bottom: 1px dashed var(--border-subtle);
+            padding-bottom: 6px;
         }
-        .stats-list li:last-child {
+        .telemetry-list li:last-child {
             border-bottom: none;
+            padding-bottom: 0;
         }
-        .stats-list strong {
+        .telemetry-list strong {
             color: var(--text-main);
             font-family: monospace;
         }
 
-        /* Chat Area */
-        .chat-main {
+        /* Config Builder Form in Sidebar */
+        .config-form {
             display: flex;
             flex-direction: column;
-            background: var(--bg-card);
+            gap: 10px;
+        }
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-sec);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .form-input {
+            width: 100%;
+            background: var(--bg-surface);
             border: 1px solid var(--border-card);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow-card);
-            height: calc(100vh - 130px);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus {
+            border-color: var(--primary);
         }
 
+        /* Main Chat Experience */
+        .main-chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: var(--bg-body);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Active Platform Bar */
+        .active-filter-bar {
+            padding: 8px 24px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            color: var(--text-sec);
+        }
+        .active-filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 186, 186, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(0, 186, 186, 0.25);
+            padding: 2px 10px;
+            border-radius: 16px;
+            font-weight: 700;
+        }
+
+        /* Message Stream */
         .chat-messages {
             flex: 1;
-            padding: 24px;
             overflow-y: auto;
+            padding: 24px 32px 120px 32px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
+            scroll-behavior: smooth;
         }
 
-        .msg-row {
-            display: flex;
-            gap: 14px;
-            max-width: 88%;
-        }
-
-        .msg-row.user {
-            align-self: flex-start;
-            flex-direction: row-reverse;
-        }
-
-        .msg-row.bot {
-            align-self: flex-end;
+        /* Center Content Wrapper for wide screens */
+        .msg-thread-item {
+            max-width: 860px;
             width: 100%;
-            max-width: 100%;
+            margin: 0 auto;
+            display: flex;
+            gap: 16px;
+            animation: fadeInMsg 0.3s ease-out;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* User Message */
+        .msg-thread-item.user {
+            justify-content: flex-start;
+            flex-direction: row-reverse;
         }
 
         .msg-avatar {
@@ -306,51 +544,91 @@
             justify-content: center;
             font-size: 18px;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .msg-row.user .msg-avatar {
-            background: var(--primary);
+        .msg-thread-item.user .msg-avatar {
+            background: linear-gradient(135deg, #00baba 0%, #008f8f 100%);
             color: #06090e;
         }
 
-        .msg-row.bot .msg-avatar {
-            background: #1e293b;
+        .msg-thread-item.bot .msg-avatar {
+            background: var(--bg-card);
             border: 1px solid var(--border-card);
+            color: var(--primary);
+        }
+
+        .msg-content-box {
+            max-width: calc(100% - 54px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .msg-thread-item.user .msg-content-box {
+            align-items: flex-start;
         }
 
         .msg-bubble {
             background: var(--bg-bot-msg);
             border: 1px solid var(--border-card);
-            border-radius: 16px;
-            padding: 18px 22px;
+            border-radius: 18px;
+            padding: 20px 24px;
             font-size: 14.5px;
-            line-height: 1.75;
+            line-height: 1.8;
             color: var(--text-main);
+            box-shadow: var(--shadow-card);
+            position: relative;
         }
 
-        .msg-row.user .msg-bubble {
+        .msg-thread-item.user .msg-bubble {
             background: var(--bg-user-msg);
-            border-color: rgba(0, 186, 186, 0.3);
+            border-color: rgba(0, 186, 186, 0.35);
             border-top-left-radius: 4px;
+            font-weight: 500;
         }
 
-        .msg-row.bot .msg-bubble {
+        .msg-thread-item.bot .msg-bubble {
             border-top-right-radius: 4px;
             width: 100%;
         }
 
-        /* Markdown Rendering */
-        .msg-bubble h3 {
-            font-size: 16px;
-            margin: 14px 0 8px 0;
+        .msg-meta-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            padding: 0 4px;
+        }
+
+        .latency-badge {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-green);
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 700;
+        }
+
+        /* Rich Markdown in Bot Bubble */
+        .msg-bubble h2, .msg-bubble h3, .msg-bubble h4 {
             color: var(--primary);
             font-weight: 900;
+            margin: 16px 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .msg-bubble h3:first-child {
+        .msg-bubble h2:first-child, .msg-bubble h3:first-child {
             margin-top: 0;
         }
         .msg-bubble p {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .msg-bubble p:last-child {
+            margin-bottom: 0;
         }
         .msg-bubble ul, .msg-bubble ol {
             margin: 10px 22px 14px 0;
@@ -363,14 +641,15 @@
             color: var(--primary);
             padding: 2px 7px;
             border-radius: 6px;
-            font-family: monospace;
+            font-family: 'Fira Code', monospace;
             font-size: 13px;
+            border: 1px solid rgba(0, 186, 186, 0.2);
         }
         .msg-bubble pre {
             background: var(--code-bg);
             border: 1px solid var(--border-card);
             border-radius: 12px;
-            padding: 14px 18px;
+            padding: 16px 18px;
             margin: 14px 0;
             overflow-x: auto;
             position: relative;
@@ -378,20 +657,19 @@
             text-align: left;
         }
         .msg-bubble pre code {
-            font-family: 'Fira Code', monospace;
+            font-family: 'Fira Code', 'Courier New', monospace;
             font-size: 13.5px;
-            line-height: 1.5;
+            line-height: 1.55;
         }
-
         .msg-bubble a {
-            color: #00e6e6 !important;
+            color: var(--primary-hover) !important;
             text-decoration: underline !important;
-            font-weight: 800;
+            font-weight: 700;
             transition: all 0.2s ease;
         }
         .msg-bubble a:hover {
             color: #ffffff !important;
-            text-shadow: 0 0 10px rgba(0, 230, 230, 0.8);
+            text-shadow: 0 0 10px var(--primary);
         }
 
         .copy-code-btn {
@@ -413,23 +691,35 @@
         }
 
         /* Citations & Suggestions Chips */
-        .citations-bar {
+        .citations-container {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .citations-header {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .citations-pills {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px dashed var(--border-subtle);
         }
-
         .citation-pill {
-            background: rgba(0, 186, 186, 0.12) !important;
+            background: rgba(0, 186, 186, 0.1) !important;
             border: 1px solid rgba(0, 186, 186, 0.35) !important;
             color: #00e6e6 !important;
-            padding: 6px 14px !important;
-            border-radius: 20px !important;
-            font-size: 12.5px !important;
-            font-weight: 800 !important;
+            padding: 5px 12px !important;
+            border-radius: 18px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
             text-decoration: none !important;
             display: inline-flex !important;
             align-items: center !important;
@@ -440,64 +730,223 @@
             background: var(--primary) !important;
             color: #06090e !important;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 186, 186, 0.4);
+            box-shadow: 0 4px 12px var(--primary-glow);
         }
 
-        .suggestions-bar {
+        .suggestions-container {
+            margin-top: 12px;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 10px;
         }
-
         .suggestion-chip {
             background: var(--bg-surface);
             border: 1px solid var(--border-card);
             color: var(--text-sec);
             padding: 5px 12px;
             border-radius: 14px;
-            font-size: 12.5px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
         .suggestion-chip:hover {
             border-color: var(--primary);
             color: var(--text-main);
+            background: var(--bg-card);
             transform: translateY(-1px);
         }
 
-        /* Chat Input Bar */
-        .chat-input-box {
-            padding: 16px 20px;
-            border-top: 1px solid var(--border-card);
-            background: var(--bg-surface);
+        /* Floating Input Container */
+        .chat-input-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(6, 9, 14, 0) 0%, var(--bg-body) 35%, var(--bg-body) 100%);
+            padding: 16px 32px 24px 32px;
             display: flex;
-            gap: 12px;
+            flex-direction: column;
             align-items: center;
+            gap: 8px;
+            z-index: 40;
         }
 
-        .chat-input {
-            flex: 1;
+        .quick-prompts-carousel {
+            max-width: 860px;
+            width: 100%;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .quick-prompts-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .quick-chip {
             background: var(--bg-card);
             border: 1px solid var(--border-card);
-            border-radius: 12px;
-            padding: 14px 18px;
+            color: var(--text-sec);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .quick-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-surface);
+        }
+
+        .chat-input-box {
+            max-width: 860px;
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s;
+        }
+        .chat-input-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow), 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .chat-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
             color: var(--text-main);
             font-size: 14.5px;
             outline: none;
-            transition: all 0.2s;
-        }
-        .chat-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 186, 186, 0.15);
+            resize: none;
+            max-height: 140px;
+            min-height: 24px;
+            line-height: 1.5;
+            padding: 6px 4px;
         }
 
+        .input-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .input-action-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-surface);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: #06090e;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px var(--primary-glow);
+            flex-shrink: 0;
+        }
+        .send-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Config Modal Drawer */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 12px;
+        }
+        .modal-header h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Responsive Breakpoints */
         @media (max-width: 900px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
             .sidebar {
-                display: none;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                width: 300px;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+            }
+            .sidebar.collapsed {
+                transform: translateX(100%);
+                width: 300px;
+            }
+            .chat-messages {
+                padding: 16px 16px 120px 16px;
+            }
+            .chat-input-wrapper {
+                padding: 12px 16px 18px 16px;
             }
         }
     </style>
@@ -507,128 +956,279 @@
     <!-- Header Navbar -->
     <header class="navbar">
         <div class="brand-box">
+            <button type="button" class="sidebar-toggle-btn" id="sidebar_toggle_btn" title="تغییر وضعیت سایدبار">
+                ☰
+            </button>
             <div class="brand-logo">☁️</div>
             <div class="brand-title">
-                <h1>دستیار هوشمند مستندات ابری لیارا <span class="badge-agent">Agentic RAG v2.0</span></h1>
-                <span>پاسخگویی فنی، عیب‌یابی خطاها و تولید خودکار کانفیگ بر پایه ۲,۲۸۷ سند رسمی</span>
+                <h1>دستیار هوشمند مستندات ابری لیارا</h1>
             </div>
+            <span class="badge-live-agent"><span class="dot"></span> Agentic RAG v2.0</span>
         </div>
 
         <div class="navbar-actions">
+            <button type="button" class="btn btn-secondary" onclick="openConfigModal()">
+                ⚙️ تولید liara.json
+            </button>
             <button type="button" class="btn btn-secondary" id="theme_toggle_btn">
                 ☀️ تم روشن
             </button>
             <a href="https://docs.liara.ir" target="_blank" class="btn btn-secondary">
-                📖 وب‌سایت مستندات لیارا
+                📖 مستندات رسمی
             </a>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-card">
-                <div class="sidebar-title">🎯 فیلتر پلتفرم و تکنولوژی</div>
-                <div class="platform-pills">
-                    <button class="plat-btn active" data-plat="">همه پلتفرم‌ها</button>
-                    <button class="plat-btn" data-plat="nodejs">NodeJS</button>
-                    <button class="plat-btn" data-plat="laravel">Laravel</button>
-                    <button class="plat-btn" data-plat="django">Django</button>
-                    <button class="plat-btn" data-plat="nextjs">Next.js</button>
-                    <button class="plat-btn" data-plat="docker">Docker</button>
-                    <button class="plat-btn" data-plat="python">Python</button>
-                    <button class="plat-btn" data-plat="postgres">Postgres</button>
-                    <button class="plat-btn" data-plat="mysql">MySQL</button>
-                    <button class="plat-btn" data-plat="redis">Redis</button>
-                    <button class="plat-btn" data-plat="iaas">سرور ابری</button>
+    <!-- App Shell Container -->
+    <div class="app-shell">
+
+        <!-- Unified Left/Right Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab-btn active" data-tab="history">💬 گفتگوها</button>
+                    <button class="sidebar-tab-btn" data-tab="platforms">🏷️ پلتفرم‌ها</button>
+                    <button class="sidebar-tab-btn" data-tab="telemetry">⚡ تله‌متری</button>
                 </div>
             </div>
 
-            <div class="sidebar-card">
-                <div class="sidebar-title">⚡ آمار موتور Hybrid RAG</div>
-                <ul class="stats-list">
-                    <li><span>تعداد مستندات ایندکس‌شده:</span> <strong>۲,۲۸۷ سند</strong></li>
-                    <li><span>موتور جستجو:</span> <strong>BM25 + RRF Hybrid</strong></li>
-                    <li><span>میانگین زمان پاسخ:</span> <strong>< 15ms</strong></li>
-                    <li><span>دقت استناد منبع:</span> <strong>۱۰۰٪ URL رسمی</strong></li>
-                    <li><span>سطح دسترس‌پذیری:</span> <strong>WCAG 2.1 AAA</strong></li>
-                </ul>
-            </div>
+            <div class="sidebar-body">
+                <!-- Pane 1: Chat History -->
+                <div class="sidebar-pane active" id="pane-history">
+                    <button class="new-chat-btn" onclick="startNewChat()">
+                        ➕ گفتگوی جدید
+                    </button>
+                    <ul class="chat-history-list" id="chat_history_list">
+                        <!-- Populated dynamically via JS -->
+                    </ul>
+                </div>
 
-            <div class="sidebar-card">
-                <div class="sidebar-title">💡 پرسش‌های پرتکرار و سناریوها</div>
-                <div class="suggestions-bar" style="margin-top: 0;">
-                    <div class="suggestion-chip" onclick="askQuick('چطور پروژه لاراول رو به دیتابیس MySQL لیارا وصل کنم؟')">🐘 لاراول + دیتابیس MySQL</div>
-                    <div class="suggestion-chip" onclick="askQuick('علت خطای 502 Bad Gateway در لیارا چیه و چطور حل کنم؟')">⚠️ رفع خطای 502 Bad Gateway</div>
-                    <div class="suggestion-chip" onclick="askQuick('نمونه فایل liara.json برای نودجی‌اس و نکست‌جی‌اس')">⚙️ تولید خودکار liara.json</div>
-                    <div class="suggestion-chip" onclick="askQuick('چطور دیسک ابری دائمی (Persistent Disk) بسازم؟')">💾 ساخت دیسک ابری دائمی</div>
-                    <div class="suggestion-chip" onclick="askQuick('پیکربندی استقرار خودکار با GitHub Actions در لیارا')">🚀 CI/CD با گیت‌هاب اکشن</div>
+                <!-- Pane 2: Platforms Filter -->
+                <div class="sidebar-pane" id="pane-platforms">
+                    <div style="font-size:12px;color:var(--text-sec);margin-bottom:4px;">انتخاب پلتفرم هدف برای پاسخگویی تخصصی:</div>
+                    <div class="platform-grid">
+                        <button class="platform-card-btn active" data-plat=""><span class="plat-icon">🌐</span> همه سرویس‌ها</button>
+                        <button class="platform-card-btn" data-plat="nodejs"><span class="plat-icon">🟢</span> Node.js</button>
+                        <button class="platform-card-btn" data-plat="laravel"><span class="plat-icon">🐘</span> Laravel</button>
+                        <button class="platform-card-btn" data-plat="django"><span class="plat-icon">🐍</span> Django</button>
+                        <button class="platform-card-btn" data-plat="nextjs"><span class="plat-icon">⚛️</span> Next.js</button>
+                        <button class="platform-card-btn" data-plat="docker"><span class="plat-icon">🐳</span> Docker</button>
+                        <button class="platform-card-btn" data-plat="python"><span class="plat-icon">📜</span> Flask / FastAPI</button>
+                        <button class="platform-card-btn" data-plat="go"><span class="plat-icon">🐹</span> Go</button>
+                        <button class="platform-card-btn" data-plat="postgres"><span class="plat-icon">🐘</span> PostgreSQL</button>
+                        <button class="platform-card-btn" data-plat="mysql"><span class="plat-icon">🐬</span> MySQL / Maria</button>
+                        <button class="platform-card-btn" data-plat="redis"><span class="plat-icon">🔴</span> Redis</button>
+                        <button class="platform-card-btn" data-plat="iaas"><span class="plat-icon">☁️</span> سرور ابری (IaaS)</button>
+                    </div>
+                </div>
+
+                <!-- Pane 3: Telemetry & Engine -->
+                <div class="sidebar-pane" id="pane-telemetry">
+                    <div class="telemetry-card">
+                        <div class="telemetry-title">⚡ وضعیت موتور جستجوی هیبریدی</div>
+                        <ul class="telemetry-list">
+                            <li><span>تعداد مستندات:</span> <strong>۲,۲۸۷ سند رسمی</strong></li>
+                            <li><span>مدل جستجو:</span> <strong>BM25 + RRF Hybrid</strong></li>
+                            <li><span>میانگین سرعت پاسخ:</span> <strong>< 15ms</strong></li>
+                            <li><span>دقت استناد منبع:</span> <strong>۱۰۰٪ URL رسمی</strong></li>
+                            <li><span>تولید کانفیگ:</span> <strong>خودکار (JSON)</strong></li>
+                            <li><span>دسترس‌پذیری:</span> <strong>WCAG 2.1 AAA</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="telemetry-card">
+                        <div class="telemetry-title">🛠️ ابزار سریع تولید کانفیگ</div>
+                        <p style="font-size:12px;color:var(--text-sec);margin-bottom:8px;">تولید فوری فایل <code>liara.json</code> برای هر پلتفرم همراه با دیسک و پورت.</p>
+                        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="openConfigModal()">
+                            ⚙️ باز کردن ابزار ساخت
+                        </button>
+                    </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Chat Area -->
-        <main class="chat-main">
-            <div class="chat-messages" id="chat_messages">
-                <!-- Welcome Message -->
-                <div class="msg-row bot">
-                    <div class="msg-avatar">🤖</div>
-                    <div class="msg-bubble">
-                        <h3>سلام! من دستیار هوشمند و عامل خودمختار مستندات پلتفرم ابری لیارا هستم. ☁️</h3>
-                        <p>می‌توانید هر سوال فنی، سناریوی استقرار، اتصال دیتابیس، رفع ارور ۵۰۲ یا درخواست تولید فایل کانفیگ <code>liara.json</code> را بپرسید تا با استناد دقیق به مستندات رسمی لیارا پاسخ دهم.</p>
+        <!-- Main Chat Experience Area -->
+        <main class="main-chat-container">
+            <!-- Active Platform Status Bar -->
+            <div class="active-filter-bar">
+                <div>
+                    <span>فیلتر فعال پلتفرم:</span>
+                    <span class="active-filter-tag" id="active_plat_display">🌐 همه سرویس‌ها</span>
+                </div>
+                <button class="btn btn-secondary" style="padding:4px 10px;font-size:11.5px;" onclick="clearCurrentChat()">
+                    🗑️ پاک‌سازی چت
+                </button>
+            </div>
 
-                        <div class="suggestions-bar">
-                            <div class="suggestion-chip" onclick="askQuick('چطور پروژه جنگو رو در لیارا مستقر کنم؟')">🐍 استقرار جنگو (Django)</div>
-                            <div class="suggestion-chip" onclick="askQuick('نحوه اتصال دامنه اختصاصی و فعال‌سازی SSL')">🌐 دامنه اختصاصی و SSL</div>
-                            <div class="suggestion-chip" onclick="askQuick('فایل liara.json برای پروژه داکر با دیسک')">🐳 داکر + دیسک دائمی</div>
+            <!-- Messages Stream -->
+            <div class="chat-messages" id="chat_messages">
+                <!-- Welcome Thread -->
+                <div class="msg-thread-item bot">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-content-box">
+                        <div class="msg-bubble">
+                            <h3>سلام! من دستیار هوشمند و عامل خودمختار مستندات پلتفرم ابری لیارا هستم. ☁️</h3>
+                            <p>با دسترسی کامل به <strong>۲,۲۸۷ سند رسمی</strong>، آماده‌ام در استقرار پروژه‌ها، اتصال دیتابیس، رفع خطاهای ۵۰۲، تنظیم دیسک ابری و تولید خودکار فایل کانفیگ <code>liara.json</code> به شما کمک کنم.</p>
+                            
+                            <div class="suggestions-container">
+                                <div class="suggestion-chip" onclick="askQuick('چطور پروژه لاراول رو به دیتابیس PostgreSQL لیارا وصل کنم؟')">🐘 لاراول + دیتابیس PostgreSQL</div>
+                                <div class="suggestion-chip" onclick="askQuick('علت خطای 502 Bad Gateway در لیارا چیه و چطور رفع کنم؟')">⚠️ رفع خطای 502 Bad Gateway</div>
+                                <div class="suggestion-chip" onclick="askQuick('نمونه کامل فایل liara.json برای داکر با دیسک دائمی')">🐳 داکر + دیسک دائمی</div>
+                                <div class="suggestion-chip" onclick="askQuick('نحوه اتصال دامنه اختصاصی و فعال‌سازی رایگان SSL')">🌐 دامنه اختصاصی و SSL</div>
+                            </div>
+                        </div>
+                        <div class="msg-meta-bar">
+                            <span>پاسخگوی هوشمند لیارا</span> • <span class="latency-badge">Hybrid RAG Ready</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Input Box -->
-            <form class="chat-input-box" id="chat_form">
-                <input type="text" id="chat_input" class="chat-input" placeholder="سوال فنی یا خطای خود را بنویسید (مثلاً: چطور پورت لاراول رو تنظیم کنم؟)..." autocomplete="off" required>
-                <button type="submit" class="btn btn-primary" id="send_btn" style="padding: 14px 22px;">
-                    🚀 ارسال
-                </button>
-            </form>
+            <!-- Floating Prompt Input Bar -->
+            <div class="chat-input-wrapper">
+                <!-- Quick Prompt Carousel -->
+                <div class="quick-prompts-carousel">
+                    <div class="quick-chip" onclick="askQuick('چطور پروژه جنگو رو با دیتابیس پستگرس مستقر کنم؟')">🐍 استقرار جنگو</div>
+                    <div class="quick-chip" onclick="askQuick('تنظیم پورت و متغیرهای محیطی در Next.js')">⚛️ پورت در Next.js</div>
+                    <div class="quick-chip" onclick="askQuick('راهنمای اتصال آبجکت استوریج S3 در نودجی‌اس')">🗄️ فضای ذخیره‌سازی S3</div>
+                    <div class="quick-chip" onclick="askQuick('نحوه راه‌اندازی صف و تسک‌های زمان‌بندی‌شده در لاراول')">⏱️ کران جاب و صف</div>
+                    <div class="quick-chip" onclick="askQuick('پیکربندی CI/CD با گیت‌هاب اکشن در لیارا')">🚀 گیت‌هاب اکشن</div>
+                </div>
+
+                <!-- Input Box -->
+                <form class="chat-input-box" id="chat_form">
+                    <textarea id="chat_input" class="chat-textarea" rows="1" placeholder="سوال فنی، خطا یا سناریوی استقرار را بنویسید (مثلاً: چطور پورت لاراول رو تنظیم کنم؟)..." required></textarea>
+                    <button type="submit" class="send-btn" id="send_btn" title="ارسال پیام">
+                        ➤
+                    </button>
+                </form>
+            </div>
         </main>
     </div>
 
+    <!-- Modal for Config Generator -->
+    <div class="modal-overlay" id="config_modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>⚙️ ابزار تولید خودکار فایل liara.json</h3>
+                <button type="button" class="modal-close-btn" onclick="closeConfigModal()">✕</button>
+            </div>
+            <div class="config-form">
+                <div class="form-group">
+                    <label>پلتفرم برنامه:</label>
+                    <select id="cfg_platform" class="form-input">
+                        <option value="node">Node.js</option>
+                        <option value="laravel">Laravel</option>
+                        <option value="django">Django</option>
+                        <option value="next">Next.js</option>
+                        <option value="docker">Docker</option>
+                        <option value="python">Flask / Python</option>
+                        <option value="static">Static (HTML/CSS/JS)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>نام برنامه در لیارا (App Name):</label>
+                    <input type="text" id="cfg_app_name" class="form-input" value="my-app" placeholder="my-awesome-app">
+                </div>
+                <div class="form-group">
+                    <label>پورت برنامه (Port):</label>
+                    <input type="number" id="cfg_port" class="form-input" value="3000">
+                </div>
+                <div class="form-group">
+                    <label>نام دیسک ابری (اختیاری):</label>
+                    <input type="text" id="cfg_disk_name" class="form-input" placeholder="uploads-data">
+                </div>
+                <div class="form-group">
+                    <label>مسیر مانت دیسک (Mount Path):</label>
+                    <input type="text" id="cfg_mount_path" class="form-input" placeholder="/app/uploads">
+                </div>
+                <button type="button" class="btn btn-primary" style="justify-content:center;margin-top:6px;" onclick="generateConfigAction()">
+                    ✨ تولید و کپی liara.json
+                </button>
+            </div>
+            <div id="cfg_output_box" style="display:none;margin-top:10px;">
+                <pre style="background:var(--code-bg);border:1px solid var(--border-card);border-radius:10px;padding:12px;direction:ltr;text-align:left;"><code id="cfg_code_block" class="language-json"></code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
     <script>
         let currentPlatform = "";
+        let chatSessions = JSON.parse(localStorage.getItem('liara_chat_sessions') || '[]');
+        let currentSessionId = localStorage.getItem('liara_current_session_id') || 'default';
 
-        // Theme Switcher
+        // Auto-initialize Default Session if empty
+        if (chatSessions.length === 0) {
+            chatSessions.push({
+                id: 'default',
+                title: 'گفتگوی عمومی مستندات',
+                messages: []
+            });
+            localStorage.setItem('liara_chat_sessions', JSON.stringify(chatSessions));
+        }
+
+        // Theme Toggle
         const savedTheme = localStorage.getItem('liara_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeToggleBtn(savedTheme);
+        updateThemeBtn(savedTheme);
 
-        document.getElementById('theme_toggle_btn').addEventListener('click', function() {
-            const current = document.documentElement.getAttribute('data-theme') || 'dark';
-            const next = current === 'dark' ? 'light' : 'dark';
+        document.getElementById('theme_toggle_btn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = cur === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('liara_theme', next);
-            updateThemeToggleBtn(next);
+            updateThemeBtn(next);
         });
 
-        function updateThemeToggleBtn(theme) {
+        function updateThemeBtn(theme) {
             document.getElementById('theme_toggle_btn').innerText = theme === 'dark' ? '☀️ تم روشن' : '🌙 تم تاریک';
         }
 
-        // Platform Filter Chips
-        document.querySelectorAll('.plat-btn').forEach(btn => {
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('sidebar_toggle_btn').addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+
+        // Sidebar Tab Switching
+        document.querySelectorAll('.sidebar-tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.sidebar-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.sidebar-pane').forEach(p => p.classList.remove('active'));
                 this.classList.add('active');
-                currentPlatform = this.dataset.plat;
+                const targetPane = document.getElementById('pane-' + this.dataset.tab);
+                if (targetPane) targetPane.classList.add('active');
             });
         });
 
-        // Chat Form Handler
-        const chatForm = document.getElementById('chat_form');
+        // Platform Selection
+        document.querySelectorAll('.platform-card-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.platform-card-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentPlatform = this.dataset.plat;
+                document.getElementById('active_plat_display').innerText = this.innerText;
+            });
+        });
+
+        // Chat Textarea Auto-expand
         const chatInput = document.getElementById('chat_input');
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+            if (this.value.trim() === '') this.style.height = '24px';
+        });
+
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('chat_form').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Chat Form Submission
+        const chatForm = document.getElementById('chat_form');
         const chatMessages = document.getElementById('chat_messages');
         const sendBtn = document.getElementById('send_btn');
 
@@ -637,12 +1237,13 @@
             const msg = chatInput.value.trim();
             if (!msg) return;
 
+            // Render User Message
             appendUserMessage(msg);
             chatInput.value = '';
+            chatInput.style.height = '24px';
             sendBtn.disabled = true;
-            sendBtn.innerText = '⏳ در حال جستجو...';
 
-            const loadingId = appendLoadingMessage();
+            const loadingId = appendLoadingIndicator();
 
             try {
                 const res = await fetch('/api/chat', {
@@ -651,18 +1252,19 @@
                     body: JSON.stringify({ message: msg, platform: currentPlatform })
                 });
                 const data = await res.json();
-                removeLoadingMessage(loadingId);
+                removeLoadingIndicator(loadingId);
                 appendBotMessage(data);
+                saveMessageToHistory(msg, data);
             } catch (err) {
-                removeLoadingMessage(loadingId);
+                removeLoadingIndicator(loadingId);
                 appendBotMessage({
-                    reply: '❌ متاسفانه در برقراری ارتباط با سرور خطایی رخ داد. لطفاً مجدداً تلاش نمایید.',
+                    reply: '❌ متاسفانه در برقراری ارتباط با موتور سرور خطایی رخ داد. لطفاً چند لحظه بعد مجدداً تلاش کنید.',
                     citations: [],
-                    suggestions: []
+                    suggestions: [],
+                    latency_ms: 0
                 });
             } finally {
                 sendBtn.disabled = false;
-                sendBtn.innerText = '🚀 ارسال';
             }
         });
 
@@ -672,71 +1274,92 @@
         }
 
         function appendUserMessage(text) {
-            const row = document.createElement('div');
-            row.className = 'msg-row user';
-            row.innerHTML = `
+            const item = document.createElement('div');
+            item.className = 'msg-thread-item user';
+            item.innerHTML = `
                 <div class="msg-avatar">👤</div>
-                <div class="msg-bubble">${escapeHtml(text)}</div>
+                <div class="msg-content-box">
+                    <div class="msg-bubble">${escapeHtml(text)}</div>
+                    <div class="msg-meta-bar" style="justify-content:flex-end;">
+                        <span>شما</span> • <span>${new Date().toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'})}</span>
+                    </div>
+                </div>
             `;
-            chatMessages.appendChild(row);
+            chatMessages.appendChild(item);
             scrollToBottom();
         }
 
-        function appendLoadingMessage() {
+        function appendLoadingIndicator() {
             const id = 'loading_' + Date.now();
-            const row = document.createElement('div');
-            row.className = 'msg-row bot';
-            row.id = id;
-            row.innerHTML = `
+            const item = document.createElement('div');
+            item.className = 'msg-thread-item bot';
+            item.id = id;
+            item.innerHTML = `
                 <div class="msg-avatar">🤖</div>
-                <div class="msg-bubble"><em>🔍 در حال جستجوی هیبریدی میان ۲,۲۸۷ سند و تحلیل پاسخ...</em></div>
+                <div class="msg-content-box">
+                    <div class="msg-bubble">
+                        <em>🔍 در حال جستجوی هیبریدی BM25+RRF میان ۲,۲۸۷ سند رسمی لیارا...</em>
+                    </div>
+                </div>
             `;
-            chatMessages.appendChild(row);
+            chatMessages.appendChild(item);
             scrollToBottom();
             return id;
         }
 
-        function removeLoadingMessage(id) {
+        function removeLoadingIndicator(id) {
             const el = document.getElementById(id);
             if (el) el.remove();
         }
 
         function appendBotMessage(data) {
-            const row = document.createElement('div');
-            row.className = 'msg-row bot';
+            const item = document.createElement('div');
+            item.className = 'msg-thread-item bot';
 
             const rawHtml = marked.parse(data.reply || '');
 
             let citationsHtml = '';
             if (data.citations && data.citations.length > 0) {
-                citationsHtml = '<div class="citations-bar"><span style="font-size:12px;color:var(--text-sec);display:flex;align-items:center;gap:4px;">🔗 مستندات رسمی مرتبط:</span>';
-                data.citations.forEach(c => {
-                    citationsHtml += `<a href="${c.url}" target="_blank" class="citation-pill">📄 ${c.title} — ${c.section} ↗</a>`;
-                });
-                citationsHtml += '</div>';
+                citationsHtml = `
+                    <div class="citations-container">
+                        <div class="citations-header">🔗 مستندات رسمی مرتبط با این موضوع:</div>
+                        <div class="citations-pills">
+                            ${data.citations.map(c => `<a href="${c.url}" target="_blank" class="citation-pill">📄 ${c.title} (${c.section}) ↗</a>`).join('')}
+                        </div>
+                    </div>
+                `;
             }
 
             let suggestionsHtml = '';
             if (data.suggestions && data.suggestions.length > 0) {
-                suggestionsHtml = '<div class="suggestions-bar">';
-                data.suggestions.forEach(s => {
-                    suggestionsHtml += `<div class="suggestion-chip" onclick="askQuick('${escapeHtml(s)}')">💡 ${s}</div>`;
-                });
-                suggestionsHtml += '</div>';
+                suggestionsHtml = `
+                    <div class="suggestions-container">
+                        ${data.suggestions.map(s => `<div class="suggestion-chip" onclick="askQuick('${escapeHtml(s)}')">💡 ${s}</div>`).join('')}
+                    </div>
+                `;
             }
 
-            row.innerHTML = `
+            const latencyTag = data.latency_ms ? `${data.latency_ms}ms` : '< 15ms';
+
+            item.innerHTML = `
                 <div class="msg-avatar">🤖</div>
-                <div class="msg-bubble">
-                    ${rawHtml}
-                    ${citationsHtml}
-                    ${suggestionsHtml}
+                <div class="msg-content-box">
+                    <div class="msg-bubble">
+                        ${rawHtml}
+                        ${citationsHtml}
+                        ${suggestionsHtml}
+                    </div>
+                    <div class="msg-meta-bar">
+                        <span>دستیار لیارا</span> • 
+                        <span class="latency-badge">⚡ ${latencyTag}</span> • 
+                        <span style="cursor:pointer;" onclick="copyFullResponse(this)">📋 کپی پاسخ</span>
+                    </div>
                 </div>
             `;
-            chatMessages.appendChild(row);
+            chatMessages.appendChild(item);
 
-            // Highlight code blocks and add 1-click copy buttons
-            row.querySelectorAll('pre code').forEach(block => {
+            // Highlight syntax and add 1-click copy buttons to code blocks
+            item.querySelectorAll('pre code').forEach(block => {
                 hljs.highlightElement(block);
                 const pre = block.parentElement;
                 const copyBtn = document.createElement('button');
@@ -753,6 +1376,15 @@
             scrollToBottom();
         }
 
+        function copyFullResponse(btn) {
+            const bubble = btn.closest('.msg-content-box').querySelector('.msg-bubble');
+            if (bubble) {
+                navigator.clipboard.writeText(bubble.innerText);
+                btn.innerText = '✅ کپی شد!';
+                setTimeout(() => btn.innerText = '📋 کپی پاسخ', 2000);
+            }
+        }
+
         function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -760,6 +1392,144 @@
         function escapeHtml(str) {
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
+
+        // Chat History & Session Management
+        function renderHistoryList() {
+            const list = document.getElementById('chat_history_list');
+            list.innerHTML = '';
+            chatSessions.forEach(session => {
+                const li = document.createElement('li');
+                li.className = 'chat-history-item' + (session.id === currentSessionId ? ' active' : '');
+                li.innerHTML = `
+                    <span class="title" onclick="switchSession('${session.id}')">💬 ${escapeHtml(session.title)}</span>
+                    <span class="del-btn" onclick="deleteSession('${session.id}', event)">✕</span>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function saveMessageToHistory(userMsg, botData) {
+            let session = chatSessions.find(s => s.id === currentSessionId);
+            if (!session) {
+                session = {
+                    id: currentSessionId,
+                    title: userMsg.slice(0, 24) + '...',
+                    messages: []
+                };
+                chatSessions.unshift(session);
+            } else if (session.messages.length === 0) {
+                session.title = userMsg.slice(0, 24) + '...';
+            }
+            session.messages.push({ role: 'user', text: userMsg });
+            session.messages.push({ role: 'bot', data: botData });
+            localStorage.setItem('liara_chat_sessions', JSON.stringify(chatSessions));
+            renderHistoryList();
+        }
+
+        function startNewChat() {
+            currentSessionId = 'session_' + Date.now();
+            localStorage.setItem('liara_current_session_id', currentSessionId);
+            chatSessions.unshift({
+                id: currentSessionId,
+                title: 'گفتگوی جدید',
+                messages: []
+            });
+            localStorage.setItem('liara_chat_sessions', JSON.stringify(chatSessions));
+            renderHistoryList();
+            clearChatUI();
+        }
+
+        function switchSession(id) {
+            currentSessionId = id;
+            localStorage.setItem('liara_current_session_id', id);
+            renderHistoryList();
+            clearChatUI();
+            const session = chatSessions.find(s => s.id === id);
+            if (session && session.messages) {
+                session.messages.forEach(m => {
+                    if (m.role === 'user') appendUserMessage(m.text);
+                    else if (m.role === 'bot') appendBotMessage(m.data);
+                });
+            }
+        }
+
+        function deleteSession(id, e) {
+            e.stopPropagation();
+            chatSessions = chatSessions.filter(s => s.id !== id);
+            if (chatSessions.length === 0) {
+                startNewChat();
+            } else {
+                localStorage.setItem('liara_chat_sessions', JSON.stringify(chatSessions));
+                if (currentSessionId === id) {
+                    switchSession(chatSessions[0].id);
+                } else {
+                    renderHistoryList();
+                }
+            }
+        }
+
+        function clearChatUI() {
+            chatMessages.innerHTML = `
+                <div class="msg-thread-item bot">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-content-box">
+                        <div class="msg-bubble">
+                            <h3>گفتگوی جدید آغاز شد. ☁️</h3>
+                            <p>چگونه می‌توانم در استقرار، پیکربندی یا رفع خطاهای پلتفرم ابری لیارا به شما کمک کنم؟</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function clearCurrentChat() {
+            let session = chatSessions.find(s => s.id === currentSessionId);
+            if (session) session.messages = [];
+            localStorage.setItem('liara_chat_sessions', JSON.stringify(chatSessions));
+            clearChatUI();
+        }
+
+        // Config Modal Functions
+        function openConfigModal() {
+            document.getElementById('config_modal').classList.add('open');
+        }
+        function closeConfigModal() {
+            document.getElementById('config_modal').classList.remove('open');
+        }
+
+        async function generateConfigAction() {
+            const platform = document.getElementById('cfg_platform').value;
+            const appName = document.getElementById('cfg_app_name').value;
+            const port = parseInt(document.getElementById('cfg_port').value) || 3000;
+            const diskName = document.getElementById('cfg_disk_name').value;
+            const mountPath = document.getElementById('cfg_mount_path').value;
+
+            try {
+                const res = await fetch('/api/generate-config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        platform: platform,
+                        app_name: appName,
+                        port: port,
+                        disk_name: diskName,
+                        mount_path: mountPath
+                    })
+                });
+                const data = await res.json();
+                const jsonStr = JSON.stringify(data.config, null, 2);
+                document.getElementById('cfg_code_block').innerText = jsonStr;
+                hljs.highlightElement(document.getElementById('cfg_code_block'));
+                document.getElementById('cfg_output_box').style.display = 'block';
+                navigator.clipboard.writeText(jsonStr);
+                alert('✅ فایل liara.json با موفقیت تولید و در کلیپ‌بورد کپی شد!');
+            } catch (err) {
+                alert('❌ خطا در تولید کانفیگ');
+            }
+        }
+
+        // Initial Load
+        renderHistoryList();
     </script>
 </body>
 </html>
