@@ -102,14 +102,14 @@ class BM25Retriever:
             return []
 
         scores = defaultdict(float)
-        
+
         # Platform detection in query
         detected_platform = None
         for p in self.platforms:
             if p in query.lower() and len(p) > 2:
                 detected_platform = p
                 break
-        
+
         filter_p = platform_filter or detected_platform
 
         for term in tokens:
@@ -128,7 +128,7 @@ class BM25Retriever:
                 doc = self.docs[doc_idx]
                 if filter_p and (doc['platform'] == filter_p or doc['category'] == filter_p):
                     score *= 1.8
-                
+
                 # Boost if term in doc title
                 if term in doc['doc_title'].lower():
                     score *= 1.5
@@ -136,7 +136,7 @@ class BM25Retriever:
                 scores[doc_idx] += score
 
         ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
-        
+
         results = []
         for doc_idx, score in ranked:
             doc = self.docs[doc_idx]
@@ -164,7 +164,7 @@ def generate_liara_json(platform: str, port: int = 3000, disk_name: str = "", mo
     }
     if port:
         config["port"] = port
-    
+
     if platform == "laravel":
         config["laravel"] = {
             "webserver": "nginx"
@@ -294,7 +294,7 @@ async def process_agent_chat(query: str, platform_filter: Optional[str] = None) 
 
     # Structured Response Construction
     formatted_reply = ""
-    
+
     # 1. Troubleshoot Intent
     if intent == "troubleshoot" and ("502" in query or "bad gateway" in query.lower()):
         diag = diagnose_liara_error(query)
@@ -470,10 +470,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install Liara CLI
         run: npm install -g @liara/cli
-        
+
       - name: Deploy to Liara
         env:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
@@ -488,7 +488,7 @@ jobs:
             raw_text = top_doc['text']
             raw_text = re.sub(r'AddOutputFilterByType[^\n]+', '', raw_text)
             raw_text = re.sub(r'\s{3,}', '\n\n', raw_text).strip()
-            
+
             formatted_reply = f"""### 📖 {top_doc['title']} — {top_doc['section']}
 
 {raw_text}
@@ -502,7 +502,7 @@ jobs:
                     formatted_reply += f"\n```bash\n{code.strip()}\n```\n"
             else:
                 formatted_reply += "\n```bash\nliara deploy\n```\n"
-                
+
             if len(results) > 1:
                 formatted_reply += "\n### 📌 نکات تکمیلی و راهنماهای مرتبط:\n"
                 for extra in results[1:3]:
@@ -545,7 +545,7 @@ async def chat_endpoint(payload: Dict[str, Any]):
     platform = payload.get("platform", None)
     if not query:
         raise HTTPException(status_code=400, detail="Query message cannot be empty.")
-    
+
     start_t = time.time()
     result = await process_agent_chat(query, platform)
     result["latency_ms"] = round((time.time() - start_t) * 1000, 1)

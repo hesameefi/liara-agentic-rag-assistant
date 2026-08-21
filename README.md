@@ -9,7 +9,7 @@
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-**دستیار هوشمند فنی، عامل خودمختار تولید پیکربندی ابری و موتور عیب‌یابی پلتفرم ابری لیارا**  
+**دستیار هوشمند فنی، عامل خودمختار تولید پیکربندی ابری و موتور عیب‌یابی پلتفرم ابری لیارا**
 *An intelligent technical documentation assistant, autonomous cloud deployment generator, and diagnostics engine for Liara Cloud.*
 
 [فارسی](#-معرفی-پروژه-به-زبان-فارسی) • [English](#-english-documentation)

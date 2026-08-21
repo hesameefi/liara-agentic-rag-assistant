@@ -6,7 +6,7 @@
     <title>دستیار هوشمند و عامل خودمختار مستندات ابری لیارا | Liara AI Documentation Agent</title>
     <meta name="description" content="عامل هوشمند پشتیبانی فنی، استقرار، تولید کانفیگ و عیب‌یابی مستندات پلتفرم ابری لیارا با موتور Hybrid RAG.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%2300baba'/><path d='M44 38c3.3 0 6-2.7 6-6 0-3-2.2-5.5-5.1-5.9C43.5 21.6 39.2 18 34 18c-4.4 0-8.2 2.6-9.9 6.4C23.5 24.1 22.8 24 22 24c-4.4 0-8 3.6-8 8s3.6 8 8 8h22z' fill='%23ffffff'/></svg>">
-    
+
     <!-- Marked.js for Markdown & Highlight.js for Code Highlighting -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -577,7 +577,7 @@
                     <div class="msg-bubble">
                         <h3>سلام! من دستیار هوشمند و عامل خودمختار مستندات پلتفرم ابری لیارا هستم. ☁️</h3>
                         <p>می‌توانید هر سوال فنی، سناریوی استقرار، اتصال دیتابیس، رفع ارور ۵۰۲ یا درخواست تولید فایل کانفیگ <code>liara.json</code> را بپرسید تا با استناد دقیق به مستندات رسمی لیارا پاسخ دهم.</p>
-                        
+
                         <div class="suggestions-bar">
                             <div class="suggestion-chip" onclick="askQuick('چطور پروژه جنگو رو در لیارا مستقر کنم؟')">🐍 استقرار جنگو (Django)</div>
                             <div class="suggestion-chip" onclick="askQuick('نحوه اتصال دامنه اختصاصی و فعال‌سازی SSL')">🌐 دامنه اختصاصی و SSL</div>
@@ -704,7 +704,7 @@
         function appendBotMessage(data) {
             const row = document.createElement('div');
             row.className = 'msg-row bot';
-            
+
             const rawHtml = marked.parse(data.reply || '');
 
             let citationsHtml = '';
@@ -734,7 +734,7 @@
                 </div>
             `;
             chatMessages.appendChild(row);
-            
+
             // Highlight code blocks and add 1-click copy buttons
             row.querySelectorAll('pre code').forEach(block => {
                 hljs.highlightElement(block);
