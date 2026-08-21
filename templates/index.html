@@ -1606,8 +1606,8 @@
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'copy-code-btn';
                 copyBtn.innerText = '📋 کپی کد';
-                copyBtn.onclick = function() {
-                    navigator.clipboard.writeText(block.innerText);
+                copyBtn.onclick = async function() {
+                    await safeCopyToClipboard(block.innerText);
                     copyBtn.innerText = '✅ کپی شد!';
                     setTimeout(() => copyBtn.innerText = '📋 کپی کد', 2000);
                 };
@@ -1617,10 +1617,10 @@
             scrollToBottom();
         }
 
-        function copyFullResponse(btn) {
+        async function copyFullResponse(btn) {
             const bubble = btn.closest('.msg-content-box').querySelector('.msg-bubble');
             if (bubble) {
-                navigator.clipboard.writeText(bubble.innerText);
+                await safeCopyToClipboard(bubble.innerText);
                 btn.innerText = '✅ کپی شد!';
                 setTimeout(() => btn.innerText = '📋 کپی پاسخ', 2000);
             }
@@ -1748,6 +1748,68 @@
             if (activePane) activePane.classList.add('active');
         }
 
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const existing = document.getElementById('liara_toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'liara_toast';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '24px';
+            toast.style.right = '24px';
+            toast.style.background = type === 'success' ? '#0e242a' : '#2a0e14';
+            toast.style.color = type === 'success' ? '#00e6e6' : '#ff4d6d';
+            toast.style.border = '1px solid ' + (type === 'success' ? '#00baba' : '#ff4d6d');
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '12px';
+            toast.style.fontSize = '13.5px';
+            toast.style.fontWeight = '700';
+            toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.6)';
+            toast.style.zIndex = '9999';
+            toast.style.display = 'flex';
+            toast.style.alignItems = 'center';
+            toast.style.gap = '8px';
+            toast.style.animation = 'fadeInMsg 0.25s ease-out';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2800);
+        }
+
+        // Safe Clipboard Copy Helper (Handles async user gesture & fallbacks)
+        async function safeCopyToClipboard(text) {
+            if (!text) return false;
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (e) {
+                    // Fallback to textarea method
+                }
+            }
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                textArea.style.top = "-9999px";
+                textArea.setAttribute("readonly", "");
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                const success = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                return success;
+            } catch (err) {
+                return false;
+            }
+        }
+
         // 1. Run Config Generator
         async function runConfigGenerator() {
             const platform = document.getElementById('cfg_platform').value;
@@ -1767,10 +1829,10 @@
                 document.getElementById('cfg_code_block').innerText = jsonStr;
                 hljs.highlightElement(document.getElementById('cfg_code_block'));
                 document.getElementById('cfg_out_box').style.display = 'block';
-                navigator.clipboard.writeText(jsonStr);
-                alert('✅ فایل liara.json تولید و در کلیپ‌بورد کپی شد!');
+                await safeCopyToClipboard(jsonStr);
+                showToast('✅ فایل liara.json ساخته و در کلیپ‌بورد کپی شد!');
             } catch (err) {
-                alert('❌ خطا در تولید کانفیگ');
+                showToast('❌ خطا در تولید کانفیگ', 'error');
             }
         }
 
@@ -1778,7 +1840,7 @@
         async function runErrorDoctor() {
             const logText = document.getElementById('doc_error_input').value.trim();
             if (!logText) {
-                alert('لطفاً متن خطا یا لاگ را وارد نمایید.');
+                showToast('⚠️ لطفاً متن خطا یا لاگ را وارد نمایید.', 'error');
                 return;
             }
 
@@ -1793,8 +1855,9 @@
                 document.getElementById('doc_fix_command').innerText = data.fix_command;
                 document.getElementById('doc_fix_details').innerText = data.fix_details + ' (فایل هدف: ' + data.target_file + ')';
                 document.getElementById('doc_result_card').classList.add('open');
+                showToast('✅ تحلیل خطا انجام شد!');
             } catch (err) {
-                alert('❌ خطا در تحلیل لاگ');
+                showToast('❌ خطا در تحلیل لاگ', 'error');
             }
         }
 
@@ -1814,10 +1877,10 @@
                 document.getElementById('ci_code_block').innerText = data.yaml;
                 hljs.highlightElement(document.getElementById('ci_code_block'));
                 document.getElementById('ci_out_box').style.display = 'block';
-                navigator.clipboard.writeText(data.yaml);
-                alert('✅ پایپ‌لاین گیت‌هاب اکشن (.github/workflows/liara.yml) تولید و کپی شد!');
+                await safeCopyToClipboard(data.yaml);
+                showToast('✅ فایل .github/workflows/liara.yml کپی شد!');
             } catch (err) {
-                alert('❌ خطا در تولید فایل CI');
+                showToast('❌ خطا در تولید فایل CI', 'error');
             }
         }
 
@@ -1836,10 +1899,10 @@
                 document.getElementById('ngx_code_block').innerText = data.config;
                 hljs.highlightElement(document.getElementById('ngx_code_block'));
                 document.getElementById('ngx_out_box').style.display = 'block';
-                navigator.clipboard.writeText(data.config);
-                alert('✅ فایل liara_nginx.conf تولید و کپی شد!');
+                await safeCopyToClipboard(data.config);
+                showToast('✅ فایل liara_nginx.conf کپی شد!');
             } catch (err) {
-                alert('❌ خطا در ساخت liara_nginx.conf');
+                showToast('❌ خطا در ساخت liara_nginx.conf', 'error');
             }
         }
 
@@ -1848,7 +1911,7 @@
             const rawEnv = document.getElementById('env_raw_input').value.trim();
             const appName = document.getElementById('env_app_name').value.trim();
             if (!rawEnv) {
-                alert('لطفاً متغیرهای فایل .env را وارد نمایید.');
+                showToast('⚠️ لطفاً متغیرهای فایل .env را وارد نمایید.', 'error');
                 return;
             }
 
@@ -1862,10 +1925,10 @@
                 document.getElementById('env_code_block').innerText = data.cli_command;
                 hljs.highlightElement(document.getElementById('env_code_block'));
                 document.getElementById('env_out_box').style.display = 'block';
-                navigator.clipboard.writeText(data.cli_command);
-                alert(`✅ تعداد ${data.count} متغیر به دستور یک‌خطی liara env:set تبدیل و کپی شد!`);
+                await safeCopyToClipboard(data.cli_command);
+                showToast(`✅ تعداد ${data.count} متغیر به دستور liara env:set تبدیل و کپی شد!`);
             } catch (err) {
-                alert('❌ خطا در تبدیل فایل .env');
+                showToast('❌ خطا در تبدیل فایل .env', 'error');
             }
         }
 
