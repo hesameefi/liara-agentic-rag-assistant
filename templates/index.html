@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دستیار هوشمند و عامل خودمختار مستندات ابری لیارا | Liara AI Documentation Studio</title>
     <meta name="description" content="عامل هوشمند پشتیبانی فنی، استقرار، تولید کانفیگ و عیب‌یابی مستندات پلتفرم ابری لیارا با موتور Hybrid RAG و جعبه‌ابزار توسعه‌دهنده.">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%2300baba'/><path d='M44 38c3.3 0 6-2.7 6-6 0-3-2.2-5.5-5.1-5.9C43.5 21.6 39.2 18 34 18c-4.4 0-8.2 2.6-9.9 6.4C23.5 24.1 22.8 24 22 24c-4.4 0-8 3.6-8 8s3.6 8 8 8h22z' fill='%23ffffff'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 45 45' fill='none'%3E%3Cpath d='M23.1104 27.7352C23.1104 25.9721 24.3517 23.8282 25.8829 22.9467L38.9462 15.4259C40.4774 14.5444 41.7188 15.259 41.7188 17.0221V32.3131C41.7188 34.0762 40.4774 36.2201 38.9462 37.1017L25.8829 44.6224C24.3517 45.504 23.1104 44.7893 23.1104 43.0262V27.7352Z' fill='url(%23g1)'/%3E%3Cpath d='M0 17.0221C0 15.259 1.2413 14.5444 2.7725 15.4259L15.8358 22.9467C17.3671 23.8282 18.6084 25.9721 18.6084 27.7352V43.0262C18.6084 44.7893 17.3671 45.504 15.8358 44.6224L2.7725 37.1017C1.2413 36.2201 0 34.0762 0 32.3131L0 17.0221Z' fill='url(%23g1)'/%3E%3Cpath d='M4.77344 11.3743C3.24219 10.4928 3.24219 9.06347 4.77344 8.18192L17.8367 0.661163C19.368 -0.220388 21.8506 -0.220387 23.3818 0.661163L36.6617 8.30665C38.193 9.1882 38.193 10.6175 36.6617 11.499L23.5984 19.0198C22.0672 19.9013 19.5846 19.9013 18.0534 19.0198L4.77344 11.3743Z' fill='url(%23g1)'/%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='42' y2='1' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%2387FCC4'/%3E%3Cstop offset='1' stop-color='%2328C1F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E">
 
     <!-- Fonts & Markdown / Syntax Highlight Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -152,15 +152,27 @@
         }
 
         .brand-logo {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #00baba 0%, #086b6b 100%);
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            background: rgba(14, 22, 34, 0.95);
+            border: 1px solid rgba(40, 193, 245, 0.35);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 14px var(--primary-glow);
+            box-shadow: 0 4px 16px rgba(40, 193, 245, 0.25);
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+            padding: 6px;
+        }
+        .brand-logo:hover {
+            border-color: #28c1f5;
+            box-shadow: 0 0 20px rgba(135, 252, 196, 0.4);
+            transform: scale(1.05);
+        }
+        .brand-logo svg {
+            width: 100%;
+            height: 100%;
         }
 
         .brand-title h1 {
@@ -1064,9 +1076,31 @@
             <button type="button" class="sidebar-toggle-btn" id="sidebar_toggle_btn" title="تغییر وضعیت سایدبار">
                 ☰
             </button>
-            <div class="brand-logo">☁️</div>
+            <div class="brand-logo" title="پلتفرم ابری لیارا">
+                <svg viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.1104 27.7352C23.1104 25.9721 24.3517 23.8282 25.8829 22.9467L38.9462 15.4259C40.4774 14.5444 41.7188 15.259 41.7188 17.0221V32.3131C41.7188 34.0762 40.4774 36.2201 38.9462 37.1017L25.8829 44.6224C24.3517 45.504 23.1104 44.7893 23.1104 43.0262V27.7352Z" fill="url(#liara_header_g1)"/>
+                    <path d="M0 17.0221C0 15.259 1.2413 14.5444 2.7725 15.4259L15.8358 22.9467C17.3671 23.8282 18.6084 25.9721 18.6084 27.7352V43.0262C18.6084 44.7893 17.3671 45.504 15.8358 44.6224L2.7725 37.1017C1.2413 36.2201 0 34.0762 0 32.3131L0 17.0221Z" fill="url(#liara_header_g2)"/>
+                    <path d="M4.77344 11.3743C3.24219 10.4928 3.24219 9.06347 4.77344 8.18192L17.8367 0.661163C19.368 -0.220388 21.8506 -0.220387 23.3818 0.661163L36.6617 8.30665C38.193 9.1882 38.193 10.6175 36.6617 11.499L23.5984 19.0198C22.0672 19.9013 19.5846 19.9013 18.0534 19.0198L4.77344 11.3743Z" fill="url(#liara_header_g3)"/>
+                    <defs>
+                        <linearGradient id="liara_header_g1" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#87FCC4"/>
+                            <stop offset="1" stop-color="#28C1F5"/>
+                        </linearGradient>
+                        <linearGradient id="liara_header_g2" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#87FCC4"/>
+                            <stop offset="1" stop-color="#28C1F5"/>
+                        </linearGradient>
+                        <linearGradient id="liara_header_g3" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#87FCC4"/>
+                            <stop offset="1" stop-color="#28C1F5"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
             <div class="brand-title">
-                <h1>دستیار هوشمند مستندات ابری لیارا</h1>
+                <h1>
+                    دستیار هوشمند مستندات ابری لیارا
+                </h1>
             </div>
             <span class="badge-live-agent"><span class="dot"></span> Agentic RAG v2.0</span>
         </div>
@@ -1198,7 +1232,19 @@
             <div class="chat-messages" id="chat_messages">
                 <!-- Welcome Thread -->
                 <div class="msg-thread-item bot">
-                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-avatar" style="padding: 4px; background: #0e1622; border: 1px solid rgba(40,193,245,0.3);">
+    <svg viewBox="0 0 45 45" fill="none" style="width: 24px; height: 24px;">
+        <path d="M23.1104 27.7352C23.1104 25.9721 24.3517 23.8282 25.8829 22.9467L38.9462 15.4259C40.4774 14.5444 41.7188 15.259 41.7188 17.0221V32.3131C41.7188 34.0762 40.4774 36.2201 38.9462 37.1017L25.8829 44.6224C24.3517 45.504 23.1104 44.7893 23.1104 43.0262V27.7352Z" fill="url(#liara_bot_g1)"/>
+        <path d="M0 17.0221C0 15.259 1.2413 14.5444 2.7725 15.4259L15.8358 22.9467C17.3671 23.8282 18.6084 25.9721 18.6084 27.7352V43.0262C18.6084 44.7893 17.3671 45.504 15.8358 44.6224L2.7725 37.1017C1.2413 36.2201 0 34.0762 0 32.3131L0 17.0221Z" fill="url(#liara_bot_g1)"/>
+        <path d="M4.77344 11.3743C3.24219 10.4928 3.24219 9.06347 4.77344 8.18192L17.8367 0.661163C19.368 -0.220388 21.8506 -0.220387 23.3818 0.661163L36.6617 8.30665C38.193 9.1882 38.193 10.6175 36.6617 11.499L23.5984 19.0198C22.0672 19.9013 19.5846 19.9013 18.0534 19.0198L4.77344 11.3743Z" fill="url(#liara_bot_g1)"/>
+        <defs>
+            <linearGradient id="liara_bot_g1" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#87FCC4"/>
+                <stop offset="1" stop-color="#28C1F5"/>
+            </linearGradient>
+        </defs>
+    </svg>
+</div>
                     <div class="msg-content-box">
                         <div class="msg-bubble">
                             <h3>سلام! من دستیار هوشمند و عامل خودمختار مستندات پلتفرم ابری لیارا هستم. ☁️</h3>
@@ -1533,7 +1579,19 @@
             item.className = 'msg-thread-item bot';
             item.id = id;
             item.innerHTML = `
-                <div class="msg-avatar">🤖</div>
+                <div class="msg-avatar" style="padding: 4px; background: #0e1622; border: 1px solid rgba(40,193,245,0.3);">
+    <svg viewBox="0 0 45 45" fill="none" style="width: 24px; height: 24px;">
+        <path d="M23.1104 27.7352C23.1104 25.9721 24.3517 23.8282 25.8829 22.9467L38.9462 15.4259C40.4774 14.5444 41.7188 15.259 41.7188 17.0221V32.3131C41.7188 34.0762 40.4774 36.2201 38.9462 37.1017L25.8829 44.6224C24.3517 45.504 23.1104 44.7893 23.1104 43.0262V27.7352Z" fill="url(#liara_bot_g1)"/>
+        <path d="M0 17.0221C0 15.259 1.2413 14.5444 2.7725 15.4259L15.8358 22.9467C17.3671 23.8282 18.6084 25.9721 18.6084 27.7352V43.0262C18.6084 44.7893 17.3671 45.504 15.8358 44.6224L2.7725 37.1017C1.2413 36.2201 0 34.0762 0 32.3131L0 17.0221Z" fill="url(#liara_bot_g1)"/>
+        <path d="M4.77344 11.3743C3.24219 10.4928 3.24219 9.06347 4.77344 8.18192L17.8367 0.661163C19.368 -0.220388 21.8506 -0.220387 23.3818 0.661163L36.6617 8.30665C38.193 9.1882 38.193 10.6175 36.6617 11.499L23.5984 19.0198C22.0672 19.9013 19.5846 19.9013 18.0534 19.0198L4.77344 11.3743Z" fill="url(#liara_bot_g1)"/>
+        <defs>
+            <linearGradient id="liara_bot_g1" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#87FCC4"/>
+                <stop offset="1" stop-color="#28C1F5"/>
+            </linearGradient>
+        </defs>
+    </svg>
+</div>
                 <div class="msg-content-box">
                     <div class="msg-bubble">
                         <em>🔍 در حال جستجوی هیبریدی BM25+RRF میان ۲,۲۸۷ سند رسمی لیارا...</em>
@@ -1555,6 +1613,43 @@
             item.className = 'msg-thread-item bot';
 
             const rawHtml = marked.parse(data.reply || '');
+
+            let tierHtml = '';
+            if (data.tier) {
+                tierHtml = `
+                    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:2px 8px;border-radius:12px;font-size:11px;margin-bottom:8px;font-weight:700;">
+                        <span>🏷️ ${data.tier}</span>
+                        <span style="color:#10b981;">💰 +${data.cost_saved_toman || 90} تومان صرفه‌جویی توکن</span>
+                    </div>
+                `;
+            }
+
+            let actionCardHtml = '';
+            if (data.action_card && data.action_card.can_heal) {
+                const ac = data.action_card;
+                const diff = ac.before_after_diff || {};
+                actionCardHtml = `
+                    <div style="background:rgba(15,23,42,0.85);border:1px solid rgba(244,63,94,0.4);border-radius:12px;padding:12px;margin-top:10px;">
+                        <div style="font-weight:800;color:#fb7185;font-size:13px;margin-bottom:8px;">🛠️ ${ac.heal_title}</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11.5px;margin-bottom:10px;">
+                            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px;border-radius:8px;">
+                                <strong style="color:#ef4444;">🔴 وضعیت قبل (خطا):</strong><br>
+                                پورت: ${diff.before ? diff.before.port : '80'}<br>
+                                وضعیت: ${diff.before ? diff.before.status : '502 Bad Gateway'}
+                            </div>
+                            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:8px;border-radius:8px;">
+                                <strong style="color:#10b981;">🟢 اصلاح بعد (تعمیر):</strong><br>
+                                پورت: ${diff.after ? diff.after.port : '3000'}<br>
+                                وضعیت: ${diff.after ? diff.after.status : '200 OK'}
+                            </div>
+                        </div>
+                        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">🔐 امضای امنیتی دیجیتال: <code>${ac.signature ? ac.signature.substring(0, 16) : 'HMAC-SHA256'}...</code> (اعتبار ۵ دقیقه)</div>
+                        <button type="button" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px;font-size:12.5px;font-weight:800;" onclick="executeSignedAction('${ac.signed_token}', '${ac.signature}', this)">
+                            ⚡ تایید و اجرای فوری اصلاحیه کانتینر
+                        </button>
+                    </div>
+                `;
+            }
 
             let citationsHtml = '';
             if (data.citations && data.citations.length > 0) {
@@ -1580,10 +1675,24 @@
             const latencyTag = data.latency_ms ? `${data.latency_ms}ms` : '< 15ms';
 
             item.innerHTML = `
-                <div class="msg-avatar">🤖</div>
+                <div class="msg-avatar" style="padding: 4px; background: #0e1622; border: 1px solid rgba(40,193,245,0.3);">
+    <svg viewBox="0 0 45 45" fill="none" style="width: 24px; height: 24px;">
+        <path d="M23.1104 27.7352C23.1104 25.9721 24.3517 23.8282 25.8829 22.9467L38.9462 15.4259C40.4774 14.5444 41.7188 15.259 41.7188 17.0221V32.3131C41.7188 34.0762 40.4774 36.2201 38.9462 37.1017L25.8829 44.6224C24.3517 45.504 23.1104 44.7893 23.1104 43.0262V27.7352Z" fill="url(#liara_bot_g1)"/>
+        <path d="M0 17.0221C0 15.259 1.2413 14.5444 2.7725 15.4259L15.8358 22.9467C17.3671 23.8282 18.6084 25.9721 18.6084 27.7352V43.0262C18.6084 44.7893 17.3671 45.504 15.8358 44.6224L2.7725 37.1017C1.2413 36.2201 0 34.0762 0 32.3131L0 17.0221Z" fill="url(#liara_bot_g1)"/>
+        <path d="M4.77344 11.3743C3.24219 10.4928 3.24219 9.06347 4.77344 8.18192L17.8367 0.661163C19.368 -0.220388 21.8506 -0.220387 23.3818 0.661163L36.6617 8.30665C38.193 9.1882 38.193 10.6175 36.6617 11.499L23.5984 19.0198C22.0672 19.9013 19.5846 19.9013 18.0534 19.0198L4.77344 11.3743Z" fill="url(#liara_bot_g1)"/>
+        <defs>
+            <linearGradient id="liara_bot_g1" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#87FCC4"/>
+                <stop offset="1" stop-color="#28C1F5"/>
+            </linearGradient>
+        </defs>
+    </svg>
+</div>
                 <div class="msg-content-box">
                     <div class="msg-bubble">
+                        ${tierHtml}
                         ${rawHtml}
+                        ${actionCardHtml}
                         ${citationsHtml}
                         ${suggestionsHtml}
                     </div>
@@ -1612,6 +1721,29 @@
             });
 
             scrollToBottom();
+        }
+
+        async function executeSignedAction(token, signature, btn) {
+            btn.disabled = true;
+            btn.innerText = '⏳ در حال اعمال اصلاحیه امنیتی...';
+            try {
+                const res = await fetch('/api/action/verify-execute', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({payload: token, signature: signature})
+                });
+                const d = await res.json();
+                if (d.status === 'success') {
+                    btn.style.background = '#10b981';
+                    btn.innerText = '✅ اصلاحیه با موفقیت اعمال شد (۲۰۰ OK)';
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = 'خطا: ' + (d.detail || 'امضا نامعتبر');
+                }
+            } catch (e) {
+                btn.disabled = false;
+                btn.innerText = 'خطا در ارتباط با سرور';
+            }
         }
 
         async function copyFullResponse(btn) {
@@ -1709,7 +1841,19 @@
         function clearChatUI() {
             chatMessages.innerHTML = `
                 <div class="msg-thread-item bot">
-                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-avatar" style="padding: 4px; background: #0e1622; border: 1px solid rgba(40,193,245,0.3);">
+    <svg viewBox="0 0 45 45" fill="none" style="width: 24px; height: 24px;">
+        <path d="M23.1104 27.7352C23.1104 25.9721 24.3517 23.8282 25.8829 22.9467L38.9462 15.4259C40.4774 14.5444 41.7188 15.259 41.7188 17.0221V32.3131C41.7188 34.0762 40.4774 36.2201 38.9462 37.1017L25.8829 44.6224C24.3517 45.504 23.1104 44.7893 23.1104 43.0262V27.7352Z" fill="url(#liara_bot_g1)"/>
+        <path d="M0 17.0221C0 15.259 1.2413 14.5444 2.7725 15.4259L15.8358 22.9467C17.3671 23.8282 18.6084 25.9721 18.6084 27.7352V43.0262C18.6084 44.7893 17.3671 45.504 15.8358 44.6224L2.7725 37.1017C1.2413 36.2201 0 34.0762 0 32.3131L0 17.0221Z" fill="url(#liara_bot_g1)"/>
+        <path d="M4.77344 11.3743C3.24219 10.4928 3.24219 9.06347 4.77344 8.18192L17.8367 0.661163C19.368 -0.220388 21.8506 -0.220387 23.3818 0.661163L36.6617 8.30665C38.193 9.1882 38.193 10.6175 36.6617 11.499L23.5984 19.0198C22.0672 19.9013 19.5846 19.9013 18.0534 19.0198L4.77344 11.3743Z" fill="url(#liara_bot_g1)"/>
+        <defs>
+            <linearGradient id="liara_bot_g1" x1="0" y1="0" x2="42" y2="1" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#87FCC4"/>
+                <stop offset="1" stop-color="#28C1F5"/>
+            </linearGradient>
+        </defs>
+    </svg>
+</div>
                     <div class="msg-content-box">
                         <div class="msg-bubble">
                             <h3>گفتگوی جدید آغاز شد. ☁️</h3>
